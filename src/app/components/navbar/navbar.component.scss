@@ -145,7 +145,7 @@
   background: linear-gradient(145deg, #060008, #0e0110);
   //padding: 1rem;
   padding-top: 68px;
-  padding-top: -68px;
+  padding-bottom: -68px;
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -188,6 +188,16 @@
 
 /* Responsive Adjustments */
 @media (max-width: 768px) {
+  .mobile-nav {
+  background: linear-gradient(145deg, #060008, #0e0110);
+  //padding: 1rem;
+  padding-top: 68px;
+  padding-bottom: -68px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  animation: fadeIn 0.4s ease-in-out;
+  }
   .logo {
     gap: 4px;
 
@@ -196,7 +206,7 @@
     }
 
     .brand-text {
-      font-size: 11px;
+      font-size: 8px;
       font-weight: 500;
     }
   }

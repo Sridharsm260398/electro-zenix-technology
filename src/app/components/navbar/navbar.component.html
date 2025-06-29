@@ -76,9 +76,17 @@
     <button mat-button routerLink="/products" (click)="toggleMobileMenu()">Products</button>
     <button mat-button routerLink="/projects" (click)="toggleMobileMenu()">Projects</button>
     <button mat-button routerLink="/contact" (click)="toggleMobileMenu()">Contact</button>
-    <button mat-button (click)="toggleTheme(); toggleMobileMenu()">
+   
+        <button mat-button routerLink="/login" (click)="toggleMobileMenu()">
+      <mat-icon>login</mat-icon> Login
+    </button>
+    <button mat-button routerLink="/signup" (click)="toggleMobileMenu()">
+      <mat-icon>person_add</mat-icon> Signup
+    </button>
+     <button mat-button (click)="toggleTheme(); toggleMobileMenu()">
       <mat-icon>{{ isDark ? 'dark_mode' : 'light_mode' }}</mat-icon> Theme
     </button>
+    
     <button mat-button (click)="logout()"> <mat-icon>logout</mat-icon> Logout </button>
   </ng-container>
 
