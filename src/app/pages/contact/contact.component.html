@@ -1,0 +1,58 @@
+<div class="contact-wrapper">
+  <div class="glass-card contact-container">
+    <!-- Left: Form -->
+    <div class="contact-left">
+      <h2>Let's Connect</h2>
+      <p>Have a project or idea? We’d love to hear from you.</p>
+
+      <form
+        [formGroup]="contactForm"
+        (ngSubmit)="submitForm($event)"
+        [ngClass]="{ 'form-success': submitSuccess, 'form-fail': submitFail }"
+      >
+        <nz-form-item>
+          <nz-form-control [nzErrorTip]="'Name is required'">
+            <div class="input-wrapper">
+              <input nz-input formControlName="name" placeholder=" " />
+              <label class="floating-label">Your Name</label>
+            </div>
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-control [nzErrorTip]="'Enter valid email'">
+            <div class="input-wrapper">
+              <input nz-input type="email" formControlName="email" placeholder=" " />
+              <label class="floating-label">Email Address</label>
+            </div>
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-control [nzErrorTip]="'Message is required'">
+            <div class="input-wrapper">
+              <textarea nz-input formControlName="message" placeholder=" " rows="4"></textarea>
+              <label class="floating-label">Your Message</label>
+            </div>
+          </nz-form-control>
+        </nz-form-item>
+
+        <!-- Removed [disabled]="contactForm.invalid" so the button is always clickable -->
+        <button nz-button class="submit-btn">Send Message</button>
+      </form>
+    </div>
+
+    <!-- Right: Info + Map -->
+    <div class="contact-right">
+      <h3>Electro Zenix Technology</h3>
+      <p><i nz-icon nzType="home"></i> Nanjegowdru Complex, Opp. to Bisleri Complex,<br />Kannamangala Gate, Devanahalli, Bengaluru, 562110</p>
+      <p><i nz-icon nzType="mail"></i> electrozenixtech&#64;gmail.com</p>
+      <p><i nz-icon nzType="phone"></i> 9740405874</p>
+      <p><i nz-icon nzType="credit-card"></i> GSTIN: 29KQGPS3200E1ZS</p>
+
+      <div class="map-container">
+        <iframe src="https://www.google.com/maps?q=12.9702,77.7104&z=15&output=embed" loading="lazy"></iframe>
+      </div>
+    </div>
+  </div>
+</div>

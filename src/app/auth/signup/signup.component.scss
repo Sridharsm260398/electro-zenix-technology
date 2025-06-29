@@ -1,0 +1,235 @@
+.login-wrapper {
+  min-height: 100vh;
+  padding-top: 30px;
+  padding-bottom: 30px;
+  //margin-top: 60px;
+  background: linear-gradient(145deg, #060008, #0e0110);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+ // padding: 1rem;
+  color: white;
+  overflow-y: auto; // allow scroll if needed
+  position: relative;
+}
+
+.glass-card {
+//  background: linear-gradient(to right, #000000, #02140b, #000000);
+  border-radius: 20px;
+  padding: 2rem;
+ // backdrop-filter: blur(14px);
+  //box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(20px);
+  //border: 1px solid rgba(255, 255, 255, 0.08);
+  background: linear-gradient(145deg, #060008, #0e0110);
+  box-shadow: 0 0 20px rgba(55, 16, 119, 0.15);
+  width: 100%;
+  max-width: 400px;
+  color: white;
+  text-align: center;
+
+  h2 {
+    color: #cccccc;
+  }
+}
+
+.subtitle {
+  font-size: 14px;
+  color: #cccccc;
+  margin-bottom: 1.5rem;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+
+  .input-wrapper {
+    position: relative;
+
+    .form-icon {
+      position: absolute;
+      top: 50%;
+      left: 12px;
+      transform: translateY(-50%);
+      color: #00f5a0;
+      font-size: 20px;
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px 12px 10px 42px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.08);
+      color: white !important;
+      font-size: 14px;
+      border: 2px solid;
+      border-image: linear-gradient(to right, #00f5a0, #00d9f5) 1;
+      transition: box-shadow 0.3s ease;
+
+      &::placeholder {
+        color: #eeeeee;
+      }
+
+      &:focus {
+        outline: none;
+        background: rgba(255, 255, 255, 0.12);
+        box-shadow: 0 0 10px rgba(0, 245, 160, 0.3);
+      }
+    }
+  }
+
+  small {
+    color: #ff4d4f;
+    font-size: 12px;
+    text-align: left;
+    display: block;
+    margin-top: 6px;
+    padding-left: 4px;
+  }
+}
+
+// .checkboxes {
+//   display: flex;
+//   justify-content: space-between;
+//   align-items: center;
+//   margin-bottom: 0.8rem;
+
+//   mat-checkbox {
+//     color: white;
+
+//     ::ng-deep .mat-checkbox-label {
+//       color: white !important;
+//     }
+
+//     ::ng-deep .mat-checkbox-inner-container {
+//       border-color: white !important;
+//     }
+//     ::ng-deep .mat-internal-form-field > label {
+//       color: white !important;
+//     }
+//     ::ng-deep .mdc-checkbox__background {
+//       border-color: white !important;
+//     }
+//   }
+// }
+
+.checkboxes {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+
+  mat-checkbox {
+    color: white;
+
+    ::ng-deep .mat-checkbox-label {
+      color: white !important;
+    }
+
+    ::ng-deep .mat-checkbox-inner-container {
+      border-color: white !important;
+    }
+
+    ::ng-deep .mat-internal-form-field > label {
+      color: white !important;
+    }
+    ::ng-deep .mdc-checkbox__background {
+      border-color: white !important;
+    }
+  }
+
+  small {
+    color: #ff4d4f;
+    font-size: 12px;
+    margin-top: 6px;
+    padding-left: 2px;
+  }
+}
+
+.error-msg {
+  color: #ff4d4f;
+  font-size: 12px;
+  text-align: left;
+  margin-bottom: 1rem;
+  padding-left: 4px;
+}
+
+.login-btn {
+  width: 100%;
+  color: #ffffff !important;
+  font-weight: bold;
+  padding: 12px;
+  background: linear-gradient(to right, #d608aa, #0bc5f3);
+
+  &:hover {
+    box-shadow: 0 0 4px rgba(11, 136, 185, 0.7);
+  }
+
+  mat-icon {
+    margin-right: 6px;
+    color: #ffffff;
+  }
+}
+
+.social-icons {
+  margin-top: 1rem;
+
+  span {
+    font-size: 13px;
+    color: #ccc;
+  }
+
+  .icons {
+    display: flex;
+    justify-content: center;
+    gap: 14px;
+    margin-top: 0.5rem;
+
+    .social-button {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.08);
+      transition: background 0.3s, transform 0.3s;
+      text-decoration: none;
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.3);
+        transform: scale(1.1);
+      }
+    }
+
+    .facebook nz-icon {
+      color: #1877f2 !important;
+      font-size: 22px !important;
+    }
+
+    .linkedin nz-icon {
+      color: #0a66c2 !important;
+      font-size: 22px !important;
+    }
+
+    .google nz-icon {
+      background: linear-gradient(45deg, #ea4335, #fbbc05, #34a853, #4285f4);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-size: 22px !important;
+    }
+  }
+}
+
+.signup-link {
+  font-size: 13px;
+  margin-top: 5px;
+  color: #ddd;
+
+  a {
+    color: #00f5a0;
+    font-weight: bold;
+  }
+}

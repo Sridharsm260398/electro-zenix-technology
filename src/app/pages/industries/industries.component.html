@@ -1,0 +1,27 @@
+<div class="industries-wrapper">
+  <section class="hero">
+    <h1>Industries We Serve</h1>
+    <p>Electro Zenix is at the forefront of delivering embedded, IoT, and electronic automation solutions across a wide range of industries. Explore how we revolutionize technology in every sector.</p>
+  </section>
+
+  <section class="industry-section" *ngFor="let sector of industryData; let i = index" [ngClass]="{ 'reverse': i % 2 !== 0 }">
+    <div class="image">
+      <img [src]="sector.image" [alt]="sector.title" />
+    </div>
+    <div class="text">
+      <h2>{{ sector.title }}</h2>
+      <p>{{ sector.description }}</p>
+      <ul>
+        <li *ngFor="let point of sector.points">
+          <mat-icon>check_circle</mat-icon> {{ point }}
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="cta">
+    <h2>Looking to transform your industry with AI and IoT?</h2>
+    <p>Let Electro Zenix craft the perfect technology solution for you.</p>
+    <button mat-raised-button color="primary" routerLink="/contact">Contact Us</button>
+  </section>
+</div>

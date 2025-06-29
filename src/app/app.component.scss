@@ -1,0 +1,15 @@
+.app-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: linear-gradient(145deg, #060008, #0e0110);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 0 10px rgba(0, 255, 160, 0.05);
+  .content {
+    padding-top: 64px;
+    flex: 1;
+    background: linear-gradient(145deg, #060008, #0e0110);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 0 10px rgba(0, 255, 160, 0.05);
+  }
+}

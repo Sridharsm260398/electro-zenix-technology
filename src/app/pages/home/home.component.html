@@ -1,0 +1,133 @@
+<div class="home-wrapper">
+  <!-- Welcome Banner -->
+     <div class="marquee-container">
+    <div class="marquee-track">
+      <span *ngFor="let text of marqueeText">{{ text.trim() }} &nbsp;&nbsp;&nbsp;</span>
+    </div>
+  </div>
+  <section class="welcome-banner">
+    <div class="banner-overlay">
+      <div class="company-logo">
+        <img src="assets/logo.svg" alt="Electro Zenix Logo" />
+        <h1>Electro Zenix Technology</h1>
+      </div>
+      <p class="tagline">"Where Tech Sparks Vision"</p>
+      <p class="welcome-msg">
+        Welcome to Electro Zenix Technology – your trusted partner in advanced electrical, electronic,
+        and multi-domain technology solutions.<br/> We provide high-quality manpower support, technical
+        services, and industrial product supplies across sectors including R&D, defense, and infrastructure.
+      </p>
+      <div class="highlights">
+        <span>100+ Projects Delivered</span>
+        <span>PAN India Service</span>
+        <span>Trusted by Government & Private Sectors</span>
+        <span>24/7 Support Availability</span>
+      </div>
+      <div class="cta-buttons">
+        <button mat-raised-button color="accent">Explore Services</button>
+        <button mat-stroked-button color="primary">Download Catalogue</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Marquee -->
+
+<section class="hero-carousel">
+    <div class="carousel-container">
+      <div
+        class="carousel-slide"
+        *ngFor="let slide of data?.heroSlides; let i = index"
+        [class.active]="i === activeSlide"
+      >
+        <div
+          class="carousel-bg"
+          [style.backgroundImage]="'url(' + slide.image + ')'"
+        >
+          <div class="slide-content">
+            <h2>{{ slide.title }}</h2>
+            <p>{{ slide.subtitle }}</p>
+            <button mat-flat-button color="accent" (click)="scrollTo('features')">
+              {{ slide.cta }}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Always-visible radio buttons in glass box -->
+      <div class="carousel-radio-container">
+        <div class="radio-wrapper">
+          <button
+            *ngFor="let slide of data?.heroSlides; let i = index"
+            [class.active]="i === activeSlide"
+            (click)="activeSlide = i"
+          ></button>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- Features -->
+  <section id="features" class="features-section">
+    <h2 class="section-title">Our Capabilities</h2>
+    <div class="features-wrapper">
+      <div *ngFor="let f of data?.features" class="feature-card">
+        <mat-icon>{{ f.icon }}</mat-icon>
+        <h3>{{ f.title }}</h3>
+        <!-- <p *ngIf="!f.expanded">{{ f.desc | slice:0:60 }}...</p> -->
+        <p>{{ f.desc }}</p>
+        <!-- <button (click)="f.expanded = !f.expanded">{{ f.expanded ? 'Less' : 'More' }}</button> -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Product Categories -->
+  <section class="categories-section">
+    <h2 class="section-title">Product Domains</h2>
+    <div class="categories-grid">
+      <div class="category-tile" *ngFor="let category of data?.categories">
+        <h4>{{ category.title }}</h4>
+        <p>{{ category.description }}</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- About Us Section -->
+  <section class="about-section">
+    <div class="about-wrapper">
+      <h2>About Electro Zenix</h2>
+      <p class="about-description">
+        Electro Zenix Technology is a multi-disciplinary company offering expert manpower services, electrical and electronics
+        product supply, and industrial solutions. With a focus on quality, innovation, and reliability, we empower industries
+        with cutting-edge tools and seamless technical support.
+      </p>
+      <div class="core-values">
+        <span>Integrity</span>
+        <span>Precision</span>
+        <span>Innovation</span>
+        <span>Commitment</span>
+      </div>
+      <div class="mission-vision">
+        <div class="vision">
+          <h3>Vision</h3>
+          <p>To become a leading partner in India’s technical advancement across electrical and electronics industries.</p>
+        </div>
+        <div class="mission">
+          <h3>Mission</h3>
+          <p>Deliver exceptional quality in services and products, and support industries with intelligent, adaptive, and future-ready solutions.</p>
+        </div>
+      </div>
+      <a class="about-link" routerLink="/about">Learn more about us →</a>
+    </div>
+  </section>
+
+  <!-- Testimonials (Final) -->
+  <section class="testimonial-section">
+    <div class="parallax-bg"></div>
+    <div class="testimonial-wrapper">
+      <h2>What Our Clients Say</h2>
+      <div class="testimonial" *ngFor="let t of data?.testimonials">
+        <blockquote>{{ t.quote }}</blockquote>
+        <cite>— {{ t.author }}</cite>
+      </div>
+    </div>
+  </section>
+</div>

@@ -1,0 +1,105 @@
+<div class="login-wrapper">
+  <div class="glass-card">
+    <h2>Create Account</h2>
+    <p class="subtitle">Sign up to get started</p>
+
+    <form [formGroup]="signupForm" (ngSubmit)="register()">
+      <!-- Full Name -->
+      <div class="form-group">
+        <div class="input-wrapper">
+          <mat-icon class="form-icon">person</mat-icon>
+          <input
+            type="text"
+            formControlName="fullName"
+            placeholder="Full Name"
+          />
+        </div>
+        <small *ngIf="submitted && f['fullName'].errors?.['required']"
+          >Name is required</small
+        >
+      </div>
+
+      <!-- Email -->
+      <div class="form-group">
+        <div class="input-wrapper">
+          <mat-icon class="form-icon">mail</mat-icon>
+          <input type="email" formControlName="email" placeholder="Email" />
+        </div>
+        <small *ngIf="submitted && f['email'].errors?.['required']"
+          >Email is required</small
+        >
+        <small *ngIf="submitted && f['email'].errors?.['email']"
+          >Invalid email</small
+        >
+      </div>
+
+      <!-- Password -->
+      <div class="form-group">
+        <div class="input-wrapper">
+          <mat-icon class="form-icon">lock</mat-icon>
+          <input
+            type="password"
+            formControlName="password"
+            placeholder="Password"
+          />
+        </div>
+        <small *ngIf="submitted && f['password'].errors?.['required']"
+          >Password is required</small
+        >
+      </div>
+
+      <!-- Confirm Password -->
+      <div class="form-group">
+        <div class="input-wrapper">
+          <mat-icon class="form-icon">lock</mat-icon>
+          <input
+            type="password"
+            formControlName="confirmPassword"
+            placeholder="Confirm Password"
+          />
+        </div>
+        <small *ngIf="submitted && f['confirmPassword'].errors?.['required']"
+          >Please confirm password</small
+        >
+        <small *ngIf="submitted && f['confirmPassword'].errors?.['mismatch']"
+          >Passwords do not match</small
+        >
+      </div>
+
+      <!-- Accept Terms -->
+      <div class="form-group checkboxes">
+        <mat-checkbox formControlName="terms"
+          >Accept Terms & Conditions</mat-checkbox
+        >
+        <small *ngIf="submitted && f['terms'].errors?.['required']"
+          >You must accept terms</small
+        >
+      </div>
+
+      <button mat-raised-button type="submit" class="login-btn">
+        <mat-icon>person_add</mat-icon> Register
+      </button>
+    </form>
+
+    <div class="social-icons">
+      <span>or continue with</span>
+      <div class="icons">
+        <a class="social-button facebook" aria-label="Facebook">
+          <nz-icon nzType="facebook" nzTheme="fill"></nz-icon>
+        </a>
+
+        <a class="social-button google" aria-label="Google">
+          <nz-icon nzType="google" nzTheme="outline"></nz-icon>
+        </a>
+
+        <a class="social-button linkedin" aria-label="LinkedIn">
+          <nz-icon nzType="linkedin" nzTheme="outline"></nz-icon>
+        </a>
+      </div>
+    </div>
+
+    <p class="signup-link">
+      Already have an account? <a routerLink="/login">Login</a>
+    </p>
+  </div>
+</div>
