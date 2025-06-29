@@ -1,0 +1,103 @@
+{
+  "heroSlides": [
+    {
+      "image": "assets/img/img2.jpeg",
+      "title": "Next-Gen Electronics",
+      "subtitle": "Engineering intelligence into every product.",
+      "cta": "Explore Products"
+    },
+    {
+      "image": "assets/img/img1.jpeg",
+      "title": "Smart Automation",
+      "subtitle": "Redefining embedded control and connectivity.",
+      "cta": "See Use Cases"
+    },
+    {
+      "image": "assets/img/img9.jpeg",
+      "title": "Power of AI + IoT",
+      "subtitle": "Bridging the future with intelligent solutions.",
+      "cta": "Learn More"
+    },
+    {
+      "image": "assets/img/img12.jpeg",
+      "title": "Custom Hardware Design",
+      "subtitle": "Tailored boards, firmware & system integration.",
+      "cta": "Start Building"
+    },
+    {
+      "image": "assets/img/img11.jpeg",
+      "title": "Industrial Grade Builds",
+      "subtitle": "Endurance-tested designs for critical industries.",
+      "cta": "Get a Quote"
+    }
+  ],
+  "hero": {
+    "title": "Empowering Next-Gen Electronics",
+    "subtitle": "From smart devices to industrial automation, we power your tech.",
+      "image": "assets/img/img10.jpeg"
+  },
+  "marquee": "⚡ Smart Systems • 🤖 AI Meets IoT • 🧠 Embedded Brilliance • 🚀 Electro Zenix Tech • 📡 Connectivity Solutions • 💡 Intelligent Design",
+  "carousel": [
+    { "image":  "assets/img/img10.jpeg", "caption": "High-precision PCB Design" },
+    { "image":  "assets/img/img2.jpeg", "caption": "IoT Sensor Networks" },
+    { "image":  "assets/img/img3.jpeg", "caption": "Smart Controllers & HMI" },
+    { "image":  "assets/img/img1.jpeg", "caption": "Testing & Validation Tools" },
+    { "image":  "assets/img/img5.jpeg","caption": "Robust Firmware Development" },
+    { "image":  "assets/img/img4.jpeg", "caption": "AI at the Edge" },
+    { "image": "assets/img/img1.jpeg", "caption": "Efficient Power Systems" },
+    { "image": "assets/img/img7.jpeg","caption": "Custom Embedded Solutions" },
+    { "image": "assets/img/img11.jpeg", "caption": "RF and Wireless Design" },
+    { "image": "assets/img/img12.jpeg", "caption": "Cloud Connected Devices" }
+  ],
+  "about": {
+    "title": "About Electro Zenix",
+    "text": "Electro Zenix is a cutting-edge electronics firm specializing in embedded systems, smart automation, IoT integration, and AI-powered devices. From concept to delivery, we help companies launch impactful tech.",
+    "image":"assets/img/img13.jpeg"
+  },
+  "features": [
+    { "icon": "memory", "title": "Embedded Firmware", "desc": "Custom microcontroller programming with real-time OS support." },
+    { "icon": "sensors", "title": "IoT Sensors", "desc": "Smart environmental and industrial sensors with wireless capabilities." },
+    { "icon": "bolt", "title": "Power Optimization", "desc": "Ultra-low power design for battery-operated devices." },
+    { "icon": "router", "title": "Connectivity", "desc": "Seamless integration with WiFi, BLE, LoRa & cellular." },
+    { "icon": "construction", "title": "Hardware Prototyping", "desc": "Rapid prototyping using 3D PCBs and custom enclosures." },
+    { "icon": "build", "title": "Industrial Design", "desc": "Smart and ergonomic enclosures for modern devices." },
+    { "icon": "precision_manufacturing", "title": "Manufacturing", "desc": "From small batches to full-scale production." },
+    { "icon": "integration_instructions", "title": "System Integration", "desc": "Bridging embedded systems with cloud, apps, and dashboards." },
+    { "icon": "hub", "title": "Gateway Solutions", "desc": "Designing intelligent hubs for device management." },
+    { "icon": "cloud", "title": "Cloud Sync", "desc": "Secure cloud integrations with AWS, GCP, Azure." },
+    { "icon": "security", "title": "Security", "desc": "Secure boot, encryption, and secure OTA updates." },
+    { "icon": "satellite", "title": "GPS & Geo", "desc": "Location-aware hardware with GPS and GNSS modules." },
+    { "icon": "track_changes", "title": "Analytics Ready", "desc": "Built-in logging and analytics-ready architecture." },
+    { "icon": "science", "title": "AI Inference", "desc": "Support for TensorFlow Lite and Edge AI on device." },
+    { "icon": "visibility", "title": "Monitoring Systems", "desc": "Live dashboards and alerting mechanisms." },
+    { "icon": "group_work", "title": "Team Collaboration", "desc": "We work alongside your team as technology partners." },
+    { "icon": "support", "title": "24/7 Support", "desc": "Get support anytime during your build and after launch." },
+    { "icon": "school", "title": "Consulting", "desc": "Embedded consultancy & design validation." },
+    { "icon": "campaign", "title": "Voice Assist", "desc": "Alexa/Google integration for embedded voice." },
+    { "icon": "camera_alt", "title": "Imaging & ML", "desc": "Camera modules + ML for visual recognition tasks." }
+  ],
+  "categories": [
+    { "title": "Consumer Electronics", "description": "Wearables, smart appliances, health monitors, smart remotes." },
+    { "title": "Industrial IoT", "description": "Sensor nodes, gateways, PLC integration, remote diagnostics." },
+    { "title": "Smart Home", "description": "Home automation, lighting, security, energy monitoring." },
+    { "title": "Medical Devices", "description": "Vitals monitors, diagnostic tools, embedded patient care tech." },
+    { "title": "Automotive", "description": "EV hardware, telemetry, smart dashboards, CAN bus nodes." },
+    { "title": "Agritech", "description": "Soil sensors, drip controllers, smart irrigation controllers." },
+    { "title": "Robotics", "description": "Motor controllers, autonomous navigation, LiDAR integration." },
+    { "title": "Energy Tech", "description": "Solar inverters, battery management systems, smart meters." },
+    { "title": "Retail & POS", "description": "Barcode systems, digital displays, payment terminals." },
+    { "title": "EdTech Kits", "description": "Arduino, micro:bit, and Raspberry Pi-based training kits." }
+  ],
+  "testimonials": [
+    { "quote": "Electro Zenix turned our sketch into a market-ready IoT controller in 60 days!", "author": "Manish Rao, CTO at InduSense" },
+    { "quote": "The firmware support and PCB precision was top-notch.", "author": "Divya Shekar, Embedded Lead - FarmBot" },
+    { "quote": "We integrated Alexa with our security sensors thanks to EZ's protocol stack.", "author": "Nikhil M., SmartSafe Pvt Ltd" },
+    { "quote": "Our startup's first medical prototype came alive thanks to Electro Zenix.", "author": "Dr. Anita P, BioQuant Labs" },
+    { "quote": "Their AI-on-Edge solution brought real-time insights to our factory.", "author": "Vivek K, CTO, MechaEdge" },
+    { "quote": "Extremely agile, worked with our Germany team overnight!", "author": "Anja K, Hardware Lead - RoboVision" },
+    { "quote": "Thanks for rescuing our power board project last-minute.", "author": "Ramesh J, PowerLine Corp" },
+    { "quote": "They even handled the plastics and enclosures, all in one roof.", "author": "Priya S, MakerGears India" },
+    { "quote": "App + board + dashboard, delivered in 6 weeks. Amazing!", "author": "Arun V, Founder - Evigo" },
+    { "quote": "Impressed with their documentation & support quality.", "author": "Mohit Shah, Senior Manager, Tesla Systems" }
+  ]
+}
