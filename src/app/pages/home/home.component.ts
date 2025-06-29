@@ -5,7 +5,6 @@ import { NzCarouselModule } from 'ng-zorro-antd/carousel';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTabsModule } from '@angular/material/tabs';
-import AOS from 'aos';
 import { RouterModule } from '@angular/router';
 
 @Component({
@@ -23,7 +22,6 @@ export class HomeComponent implements OnInit {
   constructor(private http: HttpClient) {}
 
   ngOnInit(): void {
-    AOS.init({ duration: 1000 });
 
     this.data = {
       heroIntro: {
