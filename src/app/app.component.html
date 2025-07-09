@@ -1,9 +1,20 @@
+<ngx-spinner
+  bdColor="rgba(0, 0, 0, 0.8)"
+  size="large"
+  color="#fff"
+  type="ball-spin-clockwise"
+  [zIndex]="9999"
+  [fullScreen]="true"
+>
+  <p style="color: white">Loading...</p>
+</ngx-spinner>
 <div class="app-wrapper">
-  <app-navbar></app-navbar>
+  <app-navbar *ngIf="!isAdminPage"></app-navbar>
 
-  <div class="content">
+  <div class="content" [class.no-padding]="isAdminPage">
     <router-outlet></router-outlet>
   </div>
-
+<ng-container  *ngIf="!isAdminPage">
   <app-footer *ngIf="showFooter"></app-footer>
+</ng-container>
 </div>

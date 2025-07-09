@@ -1,0 +1,22 @@
+
+<div class="dashboard-wrapper">
+  <div class="grid-container">
+    <div *ngFor="let widget of widgets" class="widget-container">
+      <mat-card class="widget-card">
+        <div class="widget-header">
+          <mat-icon>{{ widget.icon }}</mat-icon>
+          <h3>{{ widget.title }}</h3>
+        </div>
+        <div class="widget-body">
+          <ng-container [ngSwitch]="widget.type">
+            <p *ngSwitchCase="'metric'">{{ widget.value }}</p>
+            <div *ngSwitchCase="'chart'" echarts [options]="widget.chartOptions || {}" class="chart"></div>
+            <mat-list *ngSwitchCase="'logs'">
+              <mat-list-item *ngFor="let log of widget.logs">{{ log }}</mat-list-item>
+            </mat-list>
+          </ng-container>
+        </div>
+      </mat-card>
+    </div>
+  </div>
+</div>

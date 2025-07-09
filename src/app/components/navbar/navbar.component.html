@@ -12,18 +12,22 @@
         />
       </svg>
       <span class="brand-text">Electro Zenix</span>
-      
     </div>
 
     <!-- Search Bar -->
     <div class="search-bar">
       <input nz-input [(ngModel)]="searchTerm" placeholder="Search..." />
-       <nz-icon nzType="search" class="search-icon"  nzTheme="outline"></nz-icon>
+      <nz-icon nzType="search" class="search-icon" nzTheme="outline"></nz-icon>
     </div>
 
     <!-- Desktop Nav -->
     <nav class="nav-links">
-      <ng-container *ngIf="true; else guestLinks">
+       <ng-container *ngIf="isAdmin">
+    <button mat-button routerLink="/dashboard">
+      Dashboard
+    </button>
+  </ng-container>
+      <ng-container *ngIf="isLoggedIn; else guestLinks">
         <button mat-button routerLink="/">Home</button>
         <button mat-button routerLink="/about">About Us</button>
         <button mat-button [matMenuTriggerFor]="menu">
@@ -35,6 +39,7 @@
           <button mat-menu-item routerLink="/projects">Projects</button>
         </mat-menu>
         <button mat-button routerLink="/contact">Contact</button>
+
         <button
           mat-icon-button
           (click)="toggleTheme()"
@@ -42,20 +47,27 @@
         >
           <mat-icon>{{ isDark ? "dark_mode" : "light_mode" }}</mat-icon>
         </button>
-         <a mat-button routerLink="/login"><mat-icon>login</mat-icon>Login</a>
-        <a mat-button routerLink="/signup"
-          ><mat-icon>person_add</mat-icon>Signup</a
-        >
+
         <button mat-button (click)="logout()">
           <mat-icon>logout</mat-icon> Logout
         </button>
       </ng-container>
 
       <ng-template #guestLinks>
+        <button mat-button routerLink="/">Home</button>
+        <button mat-button routerLink="/about">About Us</button>
+        <button mat-button routerLink="/contact">Contact</button>
         <a mat-button routerLink="/login"><mat-icon>login</mat-icon>Login</a>
         <a mat-button routerLink="/signup"
           ><mat-icon>person_add</mat-icon>Signup</a
         >
+         <button
+          mat-icon-button
+          (click)="toggleTheme()"
+          matTooltip="Toggle Theme"
+        >
+          <mat-icon>{{ isDark ? "dark_mode" : "light_mode" }}</mat-icon>
+        </button>
       </ng-template>
     </nav>
 
@@ -64,39 +76,59 @@
       <mat-icon>menu</mat-icon>
     </button>
   </div>
-
-  <!-- Mobile Nav -->
-  <!-- Mobile Nav -->
 </header>
+
+<!-- Mobile Nav -->
 <div class="mobile-nav" *ngIf="mobileMenu">
-  <ng-container *ngIf="true; else guestMobile">
+  <ng-container *ngIf="isAdmin">
+    <button mat-button routerLink="/dashboard" (click)="toggleMobileMenu()">
+      Dashboard
+    </button>
+  </ng-container>
+  <ng-container *ngIf="isLoggedIn; else guestMobile">
     <button mat-button routerLink="/" (click)="toggleMobileMenu()">Home</button>
-    <button mat-button routerLink="/about" (click)="toggleMobileMenu()">About Us</button>
-    <button mat-button routerLink="/industries" (click)="toggleMobileMenu()">Industries</button>
-    <button mat-button routerLink="/products" (click)="toggleMobileMenu()">Products</button>
-    <button mat-button routerLink="/projects" (click)="toggleMobileMenu()">Projects</button>
-    <button mat-button routerLink="/contact" (click)="toggleMobileMenu()">Contact</button>
-   
-        <button mat-button routerLink="/login" (click)="toggleMobileMenu()">
-      <mat-icon>login</mat-icon> Login
+    <button mat-button routerLink="/about" (click)="toggleMobileMenu()">
+      About Us
     </button>
-    <button mat-button routerLink="/signup" (click)="toggleMobileMenu()">
-      <mat-icon>person_add</mat-icon> Signup
+    <button mat-button routerLink="/industries" (click)="toggleMobileMenu()">
+      Industries
     </button>
-     <button mat-button (click)="toggleTheme(); toggleMobileMenu()">
-      <mat-icon>{{ isDark ? 'dark_mode' : 'light_mode' }}</mat-icon> Theme
+    <button mat-button routerLink="/products" (click)="toggleMobileMenu()">
+      Products
     </button>
-    
-    <button mat-button (click)="logout()"> <mat-icon>logout</mat-icon> Logout </button>
+    <button mat-button routerLink="/projects" (click)="toggleMobileMenu()">
+      Projects
+    </button>
+    <button mat-button routerLink="/contact" (click)="toggleMobileMenu()">
+      Contact
+    </button>
+
+    <button mat-button (click)="toggleTheme(); toggleMobileMenu()">
+      <mat-icon>{{ isDark ? "dark_mode" : "light_mode" }}</mat-icon> Theme
+    </button>
+
+    <button mat-button (click)="logout()">
+      <mat-icon>logout</mat-icon> Logout
+    </button>
   </ng-container>
 
   <ng-template #guestMobile>
+    <button mat-button routerLink="/" (click)="toggleMobileMenu()">Home</button>
+    <button mat-button routerLink="/about" (click)="toggleMobileMenu()">
+      About Us
+    </button>
+    <button mat-button routerLink="/contact" (click)="toggleMobileMenu()">
+      Contact
+    </button>
     <a mat-button routerLink="/login" (click)="toggleMobileMenu()">
       <mat-icon>login</mat-icon> Login
     </a>
     <a mat-button routerLink="/signup" (click)="toggleMobileMenu()">
       <mat-icon>person_add</mat-icon> Signup
     </a>
+    
+    <button mat-button (click)="toggleTheme(); toggleMobileMenu()">
+      <mat-icon>{{ isDark ? "dark_mode" : "light_mode" }}</mat-icon> Theme
+    </button>
   </ng-template>
 </div>
-

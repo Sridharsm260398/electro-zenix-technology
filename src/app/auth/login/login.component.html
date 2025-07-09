@@ -1,59 +1,162 @@
+<!-- === login.component.html === -->
 <div class="login-wrapper">
   <div class="glass-card">
-    <h2>Welcome Back</h2>
-    <p class="subtitle">Please login to your account</p>
+    <h2>
+      {{
+        isResetMode
+          ? "For Reset Password"
+          : isOtpMode
+          ? "OTP Login"
+          : "Welcome Back"
+      }}
+    </h2>
+    <p class="subtitle">
+      {{
+        isResetMode
+          ? otpSent
+            ? "Enter the OTP sent to your email/phone"
+            : "Enter your email or phone to receive OTP"
+          : isOtpMode
+          ? otpSent
+            ? "Enter the OTP sent to your email/phone"
+            : "Enter your email or phone to receive OTP"
+          : "Please login to your account"
+      }}
+    </p>
 
-    <form [formGroup]="loginForm" (ngSubmit)="login()">
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <!-- Email/Phone -->
       <div class="form-group">
         <div class="input-wrapper">
           <mat-icon class="form-icon">mail</mat-icon>
-          <input type="email" formControlName="email" placeholder="Email" />
+          <input
+            type="text"
+            formControlName="email"
+            placeholder="Email or Phone"
+          />
         </div>
-        <small *ngIf="submitted && f['email'].errors?.['required']"
-          >Email is required</small
+        <small
+          *ngIf="f['email'].errors?.['required'] && (f['email'].dirty || submitted)"
         >
-        <small *ngIf="submitted && f['email'].errors?.['email']"
-          >Invalid email format</small
+          Email or Phone is required
+        </small>
+        <small
+          *ngIf="f['email'].errors?.['invalidContact'] && (f['email'].dirty || submitted)"
         >
+          Enter a valid Email or Phone Number
+        </small>
       </div>
 
-      <div class="form-group">
+      <!-- Password -->
+      <div class="form-group" *ngIf="!isOtpMode && !isResetMode">
         <div class="input-wrapper">
           <mat-icon class="form-icon">lock</mat-icon>
           <input
-            type="password"
+            [type]="showPassword ? 'text' : 'password'"
             formControlName="password"
             placeholder="Password"
           />
+          <mat-icon class="eye-icon" (click)="togglePassword()">
+            {{ showPassword ? "visibility_off" : "visibility" }}
+          </mat-icon>
         </div>
-        <small *ngIf="submitted && f['password'].errors?.['required']"
+        <small
+          *ngIf="(f['password'].dirty || submitted) && f['password'].errors?.['required']"
           >Password is required</small
         >
       </div>
 
-      <div class="checkboxes">
+      <!-- Forgot Password Link -->
+      <!-- Combined Row for Remember Me and Forgot Password -->
+      <div class="checkbox-row" *ngIf="!isOtpMode && !isResetMode">
         <mat-checkbox formControlName="remember">Remember Me</mat-checkbox>
+        <div class="forgot-pwd">
+          <a (click)="triggerResetMode()">Forgot Password?</a>
+        </div>
       </div>
 
-      <button mat-raised-button type="submit" class="login-btn">
-        <mat-icon>login</mat-icon> Login
-      </button>
+      <!-- OTP Input -->
+      <div class="form-group" *ngIf="(isOtpMode || isResetMode) && otpSent">
+        <div class="input-wrapper">
+          <mat-icon class="form-icon">sms</mat-icon>
+          <input
+            type="text"
+            maxlength="6"
+            formControlName="otp"
+            placeholder="Enter 6-digit OTP"
+          />
+        </div>
+        <small *ngIf="submitted && f['otp'].errors?.['required']"
+          >OTP is required</small
+        >
+      </div>
+
+      <!-- Countdown Timer -->
+      <div class="timer-wrapper" *ngIf="(isOtpMode || isResetMode) && otpSent">
+        <small *ngIf="timer > 0">Resend OTP in {{ timer }}s</small>
+        <a *ngIf="timer === 0" (click)="resendOtp()">Resend OTP</a>
+      </div>
+
+      <!-- Checkbox -->
+      <!-- <div class="checkboxes" *ngIf="!isOtpMode && !isResetMode">
+        <mat-checkbox formControlName="remember">Remember Me</mat-checkbox>
+      </div> -->
+
+      <!-- Buttons -->
+      <div class="action-buttons">
+        <button mat-raised-button class="login-btn" type="submit">
+          <mat-icon>
+            {{
+              isResetMode
+                ? otpSent
+                  ? "lock_reset"
+                  : "sms"
+                : isOtpMode
+                ? otpSent
+                  ? "verified_user"
+                  : "sms"
+                : "login"
+            }}
+          </mat-icon>
+          {{
+            isResetMode
+              ? otpSent
+                ? "Reset Password"
+                : "Get OTP"
+              : isOtpMode
+              ? otpSent
+                ? "Verify OTP"
+                : "Get OTP"
+              : "Login"
+          }}
+        </button>
+
+        <button
+          mat-stroked-button
+          type="button"
+          class="toggle-btn"
+          (click)="toggleMode()"
+        >
+          {{
+            isOtpMode || isResetMode ? "← Go Back to Login" : "Login with OTP"
+          }}
+        </button>
+      </div>
     </form>
 
-    <div class="social-icons">
+    <!-- Social -->
+    <div class="social-icons" *ngIf="!isOtpMode && !isResetMode">
       <span>or continue with</span>
       <div class="icons">
-        <a class="social-button facebook" aria-label="Facebook">
-          <nz-icon nzType="facebook" nzTheme="fill"></nz-icon>
-        </a>
-
-        <a class="social-button google" aria-label="Google">
-          <nz-icon nzType="google" nzTheme="outline"></nz-icon>
-        </a>
-
-        <a class="social-button linkedin" aria-label="LinkedIn">
-          <nz-icon nzType="linkedin" nzTheme="outline"></nz-icon>
-        </a>
+        <a class="social-button facebook"
+          ><nz-icon nzType="facebook" nzTheme="fill"></nz-icon
+        ></a>
+        <a class="social-button google"
+          ><nz-icon nzType="google" nzTheme="outline"></nz-icon
+        ></a>
+        <a class="social-button linkedin"
+          ><nz-icon nzType="linkedin" nzTheme="outline"></nz-icon
+        ></a>
       </div>
     </div>
 

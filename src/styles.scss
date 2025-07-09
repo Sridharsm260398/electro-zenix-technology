@@ -1,11 +1,109 @@
+// === AG Grid Community Styles ===
+//@import "ag-grid-community/styles/ag-grid.css";
+//@import "ag-grid-community/styles/ag-theme-alpine-dark.css"; // Alpine Dark
+//@import "ag-grid-community/styles/ag-theme-balham.css";    // Balham
+//@import "ag-grid-community/styles/ag-theme-fresh.css"; // Fresh
+//@import "ag-grid-community/styles/ag-theme-blue.css"; // Blue
+//@import "ag-grid-community/styles/ag-theme-dark.css"; // Dark
+//@import "ag-grid-community/styles/ag-theme-forest.css"; // Forest
 
-:host {
+//@import "ag-grid-community/styles/ag-theme-alpine.css"; // Alpine
+// @import "ag-grid-community/styles/ag-theme-material.css"; // Material
+// @import "ag-grid-community/styles/ag-theme-quartz.css"; // Quartz (new)
+
+// === Layout Styling ===
+
+/* ========================================
+   GLOBAL THEME VARIABLES & STYLES
+======================================== */
+
+:root {
+  --overlay-bg: rgba(255, 255, 255, 0.3);
+  --text-color: #121212;
+  --card-bg: rgba(255, 255, 255, 0.8);
+  --glass-blur: blur(10px);
+  --glass-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  --border-color: rgba(0, 0, 0, 0.05);
+}
+
+body.dark-theme {
+  --overlay-bg: rgba(0, 0, 0, 0.6);
+  --text-color: #f0f0f0;
+  --card-bg: rgba(255, 255, 255, 0.05);
+  --glass-blur: blur(15px);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+  --border-color: rgba(255, 255, 255, 0.1);
+}
+
+body {
+  margin: 0;
+  background-color: var(--overlay-bg);
+  color: var(--text-color);
+  font-family: 'Segoe UI', sans-serif;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* ========================================
+   APP WRAPPER LAYOUT STYLES
+======================================== */
+
+.app-wrapper {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  position: relative;
+  color: var(--text-color);
+  background: url("/assets/img/img15.jpg") no-repeat center center fixed;
+  background-size: cover;
+  backdrop-filter: blur(20px);
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    backdrop-filter: var(--glass-blur);
+    background: var(--overlay-bg);
+    z-index: -1;
+  }
+
+  .content {
+    padding-top: 64px;
+    flex: 1;
+    backdrop-filter: var(--glass-blur);
+    box-shadow: var(--glass-shadow);
+    color: var(--text-color);
+    transition: all 0.3s ease;
+  }
+
+  .content.no-padding {
+    padding-top: 0 !important;
+  }
 }
 
-router-outlet {
-  flex: 1;
-  display: block;
+/* ========================================
+   SHARED GLASS CONTAINER CLASS (OPTIONAL)
+======================================== */
+
+.glass-container {
+  background: var(--card-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  padding: 1rem;
+  box-shadow: var(--glass-shadow);
+  color: var(--text-color);
+  transition: all 0.3s ease;
 }
+
+
+// :host {
+//   display: flex;
+//   flex-direction: column;
+//   min-height: 100vh;
+// }
+
+// router-outlet {
+//   flex: 1;
+//   display: block;
+// }

@@ -1,9 +1,8 @@
 .login-wrapper {
-  min-height: 100vh;
-  padding-top: 30px;
-  padding-bottom: 30px;
+  height: auto;
+  padding: 30px;
   //margin-top: 60px;
-  background: linear-gradient(145deg, #060008, #0e0110);
+ // background: linear-gradient(145deg, #060008, #0e0110);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -16,14 +15,17 @@
 .glass-card {
 //  background: linear-gradient(to right, #000000, #02140b, #000000);
   border-radius: 20px;
-  padding: 2rem;
+     padding: 10px 20px 10px 20px;
  // backdrop-filter: blur(14px);
   //box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
     backdrop-filter: blur(20px);
   //border: 1px solid rgba(255, 255, 255, 0.08);
-  background: linear-gradient(145deg, #060008, #0e0110);
+ // background: linear-gradient(145deg, #060008, #0e0110);
   box-shadow: 0 0 20px rgba(55, 16, 119, 0.15);
   width: 100%;
+  max-width: 400px;
+  background: rgba(255, 255, 255, 0.05);
+ // width: 100%;
   max-width: 400px;
   color: white;
   text-align: center;
@@ -40,7 +42,7 @@
 }
 
 .form-group {
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
 
   .input-wrapper {
     position: relative;
@@ -84,7 +86,7 @@
     font-size: 12px;
     text-align: left;
     display: block;
-    margin-top: 6px;
+    margin-top: 2px;
     padding-left: 4px;
   }
 }
@@ -159,7 +161,7 @@
   width: 100%;
   color: #ffffff !important;
   font-weight: bold;
-  padding: 12px;
+  padding: 10px;
   background: linear-gradient(to right, #d608aa, #0bc5f3);
 
   &:hover {
@@ -187,8 +189,8 @@
     margin-top: 0.5rem;
 
     .social-button {
-      width: 40px;
-      height: 40px;
+      width: 25px;
+      height: 25px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -205,24 +207,20 @@
 
     .facebook nz-icon {
       color: #1877f2 !important;
-      font-size: 22px !important;
+      font-size: 15px !important;
     }
 
     .linkedin nz-icon {
       color: #0a66c2 !important;
-      font-size: 22px !important;
+      font-size: 15px !important;
     }
 
     .google nz-icon {
-      background: linear-gradient(45deg, #ea4335, #fbbc05, #34a853, #4285f4);
-      -webkit-background-clip: text;
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
-      font-size: 22px !important;
+      color: #db4437 !important;
+      font-size: 15px !important;
     }
   }
 }
-
 .signup-link {
   font-size: 13px;
   margin-top: 5px;

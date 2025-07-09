@@ -1,6 +1,6 @@
 .about-wrapper {
   padding: 20px 20px;
-  background: linear-gradient(145deg, #060008, #0e0110);
+ // background: linear-gradient(145deg, #060008, #0e0110);
   color: #ffffff;
   font-family: 'Poppins', sans-serif;
 }
@@ -94,9 +94,8 @@
       }
 
       mat-icon {
-        font-size: 28px;
-        color: #d6ccff;
-        margin-bottom: 0.5rem;
+        font-size: 24px;
+        color: #d4dde0;
         transition: transform 0.3s ease;
 
         &:hover {

@@ -1,0 +1,68 @@
+<!-- === admin.component.html === -->
+<div class="admin-wrapper">
+  <div class="glass-card-wide">
+    <!-- <div class="tab-bar">
+      <button [class.active]="activeTab === 'users'" (click)="switchTab('users')">Users</button>
+      <button [class.active]="activeTab === 'messages'" (click)="switchTab('messages')">Messages</button>
+      <button [class.active]="activeTab === 'roles'" (click)="switchTab('roles')">Roles</button>
+    </div> -->
+
+    <div class="tab-content">
+     <div class="actions-ai">
+  <button mat-raised-button color="primary" class="ai-btn" (click)="openEditDialog()">
+    <i nz-icon nzType="user-add" nzTheme="outline"></i>  Add User
+  </button>
+
+  <button mat-stroked-button color="warn" class="ai-btn" (click)="deleteSelected()">
+    <i nz-icon nzType="delete" nzTheme="outline"></i> Delete User
+  </button>
+
+  <button mat-stroked-button color="accent" class="ai-btn" (click)="exportCSV()">
+    <i nz-icon nzType="download" nzTheme="outline"></i> Export CSV
+  </button>
+
+  <nz-select
+    class="ai-theme-select"
+    [(ngModel)]="theme"
+    [nzDropdownMatchSelectWidth]="false"
+    nzSize="small"
+  >
+    <nz-option
+      *ngFor="let theme of themes"
+      [nzValue]="theme.theme"
+      [nzLabel]="theme.label"
+    ></nz-option>
+  </nz-select>
+</div>
+
+
+      <ag-grid-angular
+        #gridRef
+        [theme]="theme"
+        [rowData]="rowData()"
+        [columnDefs]="columnDefs"
+        [defaultColDef]="defaultColDef"
+        [pagination]="true"
+        [paginationPageSize]="pageSize"
+        rowSelection="multiple"
+        domLayout="autoHeight"
+        (gridReady)="onGridReady($event)"
+      ></ag-grid-angular>
+    </div>
+
+    <div *ngIf="activeTab === 'messages'" class="tab-content">
+      <div class="msg-card" *ngFor="let user of rowData()">
+        <h4>
+          {{ user.name }} <span class="role">({{ user.role }})</span>
+        </h4>
+        <p><strong>Email:</strong> {{ user.email }}</p>
+        <p><strong>Contact:</strong> {{ user.contact }}</p>
+        <p><strong>Message:</strong> {{ user.message }}</p>
+      </div>
+    </div>
+
+    <div *ngIf="activeTab === 'roles'" class="tab-content">
+      <h3>Role Management Coming Soon...</h3>
+    </div>
+  </div>
+</div>

@@ -1,51 +1,100 @@
-import {Routes} from '@angular/router';
-import {AuthGuard} from './auth/auth.guard';
+import { Routes } from '@angular/router';
+import { AuthGuard } from './auth/auth.guard'; // update path as needed
 
 export const routes: Routes = [
   {
     path: '',
- //   canActivate: [AuthGuard],
-    loadComponent: () => import('./pages/home/home.component').then((m) => m.HomeComponent),
+    loadComponent: () =>
+      import('./pages/home/home.component').then((m) => m.HomeComponent),
   },
   {
     path: 'about',
-   // canActivate: [AuthGuard],
-    loadComponent: () => import('./pages/about/about.component').then((m) => m.AboutComponent),
+    loadComponent: () =>
+      import('./pages/about/about.component').then((m) => m.AboutComponent),
   },
   {
     path: 'industries',
-   // canActivate: [AuthGuard],
+    canActivate: [AuthGuard],
     loadComponent: () =>
-      import('./pages/industries/industries.component').then((m) => m.IndustriesComponent),
+      import('./pages/industries/industries.component').then(
+        (m) => m.IndustriesComponent
+      ),
   },
   {
     path: 'products',
-  //  canActivate: [AuthGuard],
+    canActivate: [AuthGuard],
     loadComponent: () =>
-      import('./pages/products/products.component').then((m) => m.ProductsComponent),
+      import('./pages/products/products.component').then(
+        (m) => m.ProductsComponent
+      ),
   },
   {
     path: 'projects',
-   // canActivate: [AuthGuard],
+    canActivate: [AuthGuard],
     loadComponent: () =>
-      import('./pages/projects/projects.component').then((m) => m.ProjectsComponent),
+      import('./pages/projects/projects.component').then(
+        (m) => m.ProjectsComponent
+      ),
   },
   {
     path: 'contact',
- //   canActivate: [AuthGuard],
     loadComponent: () =>
-      import('./pages/contact/contact.component').then((m) => m.ContactComponent),
+      import('./pages/contact/contact.component').then(
+        (m) => m.ContactComponent
+      ),
   },
   {
     path: 'login',
-    loadComponent: () => import('./auth/login/login.component').then((m) => m.LoginComponent),
+    loadComponent: () =>
+      import('./auth/login/login.component').then((m) => m.LoginComponent),
   },
   {
     path: 'signup',
-    loadComponent: () => import('./auth/signup/signup.component').then((m) => m.SignupComponent),
+    loadComponent: () =>
+      import('./auth/signup/signup.component').then((m) => m.SignupComponent),
   },
+  {
+    path: 'reset-password',
+    loadComponent: () =>
+      import('./auth/reset-password/reset-password.component').then(
+        (m) => m.ResetPasswordComponent
+      ),
+  },
+
+  {
+    path: 'dashboard',
+    canActivate: [AuthGuard],
+    data: { roles: ['admin'] }, 
+    loadComponent: () =>
+      import('./components/dashboard/dashboard.component').then((m) => m.DashboardComponent),
+    children: [
+      {
+        path: '',
+        redirectTo: 'home',
+        pathMatch: 'full',
+      },
+      {
+        path: 'home',
+        canActivate: [AuthGuard],
+        data: { roles: ['admin'] },
+        loadComponent: () =>
+          import('./components/dashboard-home/dashboard-home.component').then(
+            (m) => m.DashboardHomeComponent
+          ),
+      },
+      {
+        path: 'admin',
+        canActivate: [AuthGuard],
+        data: { roles: ['admin'] }, // only admins can access
+        loadComponent: () =>
+          import('./components/admin/admin.component').then((m) => m.AdminComponent),
+      },
+    ],
+  },
+
+  // fallback
   {
     path: '**',
     redirectTo: '',
-  },
+  }
 ];

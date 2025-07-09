@@ -1,15 +1,66 @@
-.app-wrapper {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  background: linear-gradient(145deg, #060008, #0e0110);
-  backdrop-filter: blur(10px);
-  box-shadow: 0 0 10px rgba(0, 255, 160, 0.05);
-  .content {
-    padding-top: 64px;
-    flex: 1;
-    background: linear-gradient(145deg, #060008, #0e0110);
-    backdrop-filter: blur(10px);
-    box-shadow: 0 0 10px rgba(0, 255, 160, 0.05);
-  }
-}
+// .app-wrapper {
+//   display: flex;
+//   flex-direction: column;
+//   min-height: 100vh;
+//   background: linear-gradient(145deg, #060008, #0e0110);
+//   backdrop-filter: blur(10px);
+//   box-shadow: 0 0 10px rgba(0, 255, 160, 0.05);
+//   .content {
+//     padding-top: 64px;
+//     flex: 1;
+//     background: linear-gradient(145deg, #060008, #0e0110);
+//     backdrop-filter: blur(10px);
+//     box-shadow: 0 0 10px rgba(0, 255, 160, 0.05);
+//   }
+// }
+
+// :root {
+//   --overlay-bg: rgba(0, 0, 0, 0.6);
+//   --text-color: #f0f0f0;
+//   --content-shadow: 0 0 10px rgba(0, 255, 160, 0.05);
+// }
+
+// body.light-theme {
+//   --overlay-bg: rgba(255, 255, 255, 0.3);
+//   --text-color: #121212;
+//   --content-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+// }
+
+// body.dark-theme {
+//   --overlay-bg: rgba(0, 0, 0, 0.6);
+//   --text-color: #f0f0f0;
+//   --content-shadow: 0 0 10px rgba(0, 255, 160, 0.05);
+// }
+
+// .app-wrapper {
+//   display: flex;
+//   flex-direction: column;
+//   min-height: 100vh;
+//   position: relative;
+//   color: var(--text-color);
+//   background: url("/assets/img/img15.jpg") no-repeat center center fixed;
+//   background-size: cover;
+//   backdrop-filter: blur(20px);
+
+//   &::before {
+//     content: "";
+//     position: absolute;
+//     inset: 0;
+//     backdrop-filter: blur(15px);
+//     background: var(--overlay-bg);
+//     z-index: -1;
+//   }
+
+//   .content {
+//     padding-top: 64px;
+//     flex: 1;
+//     backdrop-filter: blur(15px);
+//     box-shadow: var(--content-shadow);
+//     color: var(--text-color);
+//     transition: background 0.3s ease, color 0.3s ease;
+//   }
+
+//   .content.no-padding {
+//     padding-top: 0 !important;
+//   }
+// }

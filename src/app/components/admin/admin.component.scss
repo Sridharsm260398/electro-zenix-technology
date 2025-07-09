@@ -1,0 +1,250 @@
+.admin-wrapper {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  //padding: 2rem;
+  color: white;
+  //background: url('/assets/img15.jpg') no-repeat center center fixed;
+  background-size: cover;
+  backdrop-filter: blur(18px);
+}
+
+.glass-card-wide {
+  width: 100%;
+  border-radius: 20px;
+  padding: 2rem;
+  background: rgba(0, 0, 0, 0);
+  backdrop-filter: blur(10px);
+ box-shadow: 0 0 25px rgba(66, 70, 68, 0.15);
+}
+
+.tab-bar {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 1.5rem;
+
+  button {
+    padding: 10px 20px;
+    border: none;
+    background: transparent;
+    color: #aaa;
+    font-weight: bold;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.3s;
+
+    &.active {
+      color: #00f5a0;
+      border-color: #00f5a0;
+    }
+  }
+}
+
+// .tab-content {
+//   margin-top: 1rem;
+// }
+
+.actions-ai {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 20px;
+
+  .ai-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 14px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 0 8px rgba(0, 255, 255, 0.3);
+    backdrop-filter: blur(8px);
+    transition: all 0.3s ease-in-out;
+
+    nz-icon {
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+    }
+
+    &:hover {
+      transform: scale(1.03);
+      box-shadow: 0 0 12px rgba(0, 255, 255, 0.6);
+    }
+  }
+
+  .ai-theme-select {
+    min-width: 160px;
+    margin-left: auto;
+    background: rgba(243, 238, 238, 0.05);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 0 5px rgba(0, 255, 255, 0.1);
+    backdrop-filter: blur(4px);
+    color: white;
+
+    ::ng-deep .ant-select-selector {
+      background-color: transparent !important;
+      color: white;
+      border: none;
+    }
+  }
+  
+    ::ng-deep .ai-theme-select {
+    min-width: 180px;
+    background: rgba(255, 255, 255, 0.06);
+    border-radius: 8px;
+    color: #00f5a0;
+    border: 1px solid #00f5a0;
+    .ant-select-selector {
+      background-color: transparent !important;
+      color: #00f5a0 !important;
+      font-weight: bold;
+      border: none;
+    }
+    .ant-select-arrow {
+      color: #00f5a0 !important;
+    }
+  }
+}
+
+
+// ACTIONS COLUMN (EDIT/DELETE LINKS)
+::ng-deep .link-action {
+  text-decoration: none;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 13px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+
+  i[nz-icon] {
+    font-size: 16px;
+    color: #00f5a0;
+    background: rgba(0, 255, 200, 0.1);
+    padding: 6px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.3s;
+  }
+
+  &.edit {
+    color: #4cd137;
+    &:hover {
+      color: #44bd32;
+    }
+  }
+
+  &.delete {
+    color: #f14668;
+    &:hover {
+      color: #ff4d4f;
+    }
+  }
+}
+
+// ROLE TAGS
+::ng-deep .role-tag {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  margin: 0 3px 3px 0;
+  color: white;
+}
+
+::ng-deep .role-admin {
+  background: linear-gradient(to right, #ff416c, #ff4b2b);
+  font-size: 11px;
+  padding: 3px 6px;
+  color: white;
+}
+
+::ng-deep .role-user {
+  background: linear-gradient(to right, #129667, #095863);
+  font-size: 11px;
+  padding: 3px 6px;
+  color: white;
+}
+
+::ng-deep .role-editor {
+  background: linear-gradient(to right, #6a11cb, #2575fc);
+  font-size: 11px;
+  padding: 3px 6px;
+  color: white;
+}
+
+// MESSAGE CARDS
+::ng-deep .msg-card {
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(12px);
+  border-radius: 12px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 0 8px rgba(0, 245, 160, 0.1);
+
+  h4 {
+    color: #00f5a0;
+  }
+
+  p {
+    margin: 0.3rem 0;
+    color: #ddd;
+  }
+
+  .role {
+    color: #fff;
+    font-size: 13px;
+  }
+}
+
+// GLASSY DIALOG
+::ng-deep .glass-dialog .mat-dialog-container {
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(24px);
+  color: white;
+  border-radius: 20px;
+  padding: 2rem;
+  max-height: 85vh;
+  overflow-y: auto;
+  box-shadow: 0 0 40px rgba(0, 245, 160, 0.3);
+  max-width: 480px;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  font-family: 'Segoe UI', sans-serif;
+  font-size: 14px;
+}
+
+::ng-deep .glass-dialog .mat-form-field {
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+::ng-deep .glass-dialog .mat-form-field label,
+::ng-deep .glass-dialog .mat-select-value-text,
+::ng-deep .glass-dialog .mat-input-element {
+  color: #fff;
+}
+
+::ng-deep .glass-dialog .mat-select-arrow {
+  color: #00f5a0;
+}
+
+::ng-deep .glass-dialog .mat-raised-button.mat-primary {
+  background: linear-gradient(to right, #00f5a0, #00d9f5);
+  color: black;
+  font-weight: bold;
+}
+
+::ng-deep .glass-dialog .mat-button {
+  color: #00f5a0;
+  font-weight: bold;
+}

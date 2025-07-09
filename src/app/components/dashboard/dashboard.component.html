@@ -1,0 +1,107 @@
+<nz-layout class="dashboard-layout">
+  <nz-sider
+    [nzCollapsible]="true"
+    [(nzCollapsed)]="isCollapsed"
+    [nzWidth]="220"
+    class="sider"
+  >
+    <div class="logo" [ngClass]="{ collapsed: isCollapsed }">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" fill="currentColor" />
+      </svg>
+      <span class="logo-text">Electro-Zenix</span>
+    </div>
+
+    <ul
+      nz-menu
+      nzTheme="dark"
+      nzMode="inline"
+      [nzInlineCollapsed]="isCollapsed"
+    >
+      <li nz-menu-item [routerLink]="'/dashboard/home'" nz-tooltipTitle="Dashboard">
+        <span nz-icon nzType="dashboard"></span>
+        <span>Dashboard</span>
+      </li>
+
+      <li nz-submenu nzTitle="Settings" nzIcon="setting">
+        <ul>
+          <li nz-menu-group nzTitle="General">
+            <ul>
+              <li nz-menu-item [routerLink]="'/settings/home'">
+                <span nz-icon nzType="home"></span>
+                <span>Home</span>
+              </li>
+              <li nz-menu-item [routerLink]="'/settings/profile'">
+                <span nz-icon nzType="user"></span>
+                <span>Profile</span>
+              </li>
+            </ul>
+          </li>
+          <li nz-menu-group nzTitle="Advanced">
+            <ul>
+              <li nz-menu-item [routerLink]="'/settings/preferences'">
+                <span nz-icon nzType="control"></span>
+                <span>Preferences</span>
+              </li>
+              <li nz-menu-item [routerLink]="'/settings/security'">
+                <span nz-icon nzType="safety"></span>
+                <span>Security</span>
+              </li>
+              <li nz-menu-item (click)="toggleTheme()">
+                <span>  <mat-icon style="margin-bottom: -6px;">{{ isDark ? "dark_mode" : "light_mode" }}</mat-icon> Theme</span>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+
+      <li nz-menu-item [routerLink]="'/dashboard/admin'" nz-tooltipTitle="Admin">
+        <span nz-icon nzType="user"></span>
+        <span>Admin</span>
+      </li>
+      <li nz-menu-item (click)="logout()" nz-tooltipTitle="Logout">
+        <span nz-icon nzType="logout"></span>
+        <span>Logout</span>
+      </li>
+    </ul>
+  </nz-sider>
+
+  <nz-layout>
+    <nz-header class="dashboard-header">
+      <div class="header-title">Admin Dashboard</div>
+
+      <div class="header-user-info">
+        <span class="time">{{ currentTime() | date : "hh:mm:ss a" }}</span>
+        <span class="user-name">{{ userName }}</span>
+        <a nz-dropdown [nzDropdownMenu]="userMenu" nzTrigger="click">
+          <div style="display: flex; align-items: center; cursor: pointer">
+            <nz-avatar
+              [nzIcon]="'user'"
+              [nzSize]="'small'"
+              class="user-avatar"
+              style="margin-left: 8px"
+            ></nz-avatar>
+            <span style="margin-left: 6px; font-weight: 500; color: #fff;"></span>
+          </div>
+        </a>
+
+        <nz-dropdown-menu #userMenu="nzDropdownMenu">
+          <ul nz-menu>
+            <li nz-menu-item [routerLink]="'/settings/profile'">
+              <span nz-icon nzType="user"></span>
+              View Profile
+            </li>
+            <li nz-menu-item (click)="logout()">
+              <span nz-icon nzType="logout"></span>
+              Logout
+            </li>
+          </ul>
+        </nz-dropdown-menu>
+      </div>
+    </nz-header>
+
+    <nz-content class="dashboard-content">
+      <router-outlet></router-outlet>
+    </nz-content>
+  </nz-layout>
+</nz-layout>

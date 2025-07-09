@@ -1,22 +1,23 @@
 .industries-wrapper {
   padding: 0;
-  background: linear-gradient(145deg, #060008, #0e0110);
+  //background: linear-gradient(145deg, #060008, #0e0110);
   color: #ffffff;
   font-family: 'Poppins', sans-serif;
   position: relative;
   overflow: hidden;
+  backdrop-filter: blur(40px);
 
-  &::before {
-    content: '';
-    position: absolute;
-    top: -10%;
-    left: -10%;
-    width: 120%;
-    height: 120%;
-    background: radial-gradient(circle at top left, rgba(6, 136, 90, 0.1), transparent 60%),
-                radial-gradient(circle at bottom right, rgba(0, 217, 245, 0.08), transparent 60%);
-    z-index: 0;
-  }
+  // &::before {
+  //   content: '';
+  //   position: absolute;
+  //   top: -10%;
+  //   left: -10%;
+  //   width: 120%;
+  //   height: 120%;
+  //   background: radial-gradient(circle at top left, rgba(6, 136, 90, 0.1), transparent 60%),
+  //               radial-gradient(circle at bottom right, rgba(0, 217, 245, 0.08), transparent 60%);
+  //   z-index: 0;
+  // }
 
   > * {
     position: relative;
