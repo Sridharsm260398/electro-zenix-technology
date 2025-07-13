@@ -15,6 +15,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { AuthService } from '../auth.service';
 import { ToastService } from '../../shared/toast.service';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -41,7 +42,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   interval: any;
   showPassword = false;
   otpToken = '';
-
+  resetToken = '';
   constructor(
     private router: Router,
     private toast: ToastService,
@@ -108,104 +109,131 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.f['otp'].updateValueAndValidity();
   }
 
-  onSubmit(): void {
-    this.submitted = true;
-    if (this.loginForm.invalid) return;
+ onSubmit(): void {
+  this.submitted = true;
+  if (this.loginForm.invalid) return;
 
-    const contact = this.f['email'].value;
-    const password = this.f['password'].value;
-    const rememberMe = this.f['remember'].value
-    const otp = this.f['otp'].value;
+  const contact = this.f['email'].value;
+  const password = this.f['password'].value;
+  const rememberMe = this.f['remember'].value;
+  const otp = this.f['otp'].value;
 
-    if (this.isResetMode) {
-      if (!this.otpSent) {
-        this.toast.loading('Sending OTP...');
-        this.authService.forgotPassword(contact).subscribe({
-          next: (res) => {
-            this.otpSent = true;
-            this.otpToken = res.token || '123456';
-            this.startTimer();
-            this.resetOtpValidators();
-            this.toast.clearAll();
-            this.toast.success(`OTP sent to ${contact}`);
-          },
-          error: (err) => {
-            this.toast.clearAll();
-            this.toast.error(
-              `Error: ${err.error.message || 'Failed to send OTP'}`
-            );
-          },
-        });
-        return;
-      }
+  //FORGOT PASSWORD FLOW
+  if (this.isResetMode) {
+    if (!this.otpSent) {
+      this.toast.loading('Sending OTP and generating reset token...');
 
-      this.toast.success('OTP verified. Redirecting...');
-      this.toast.clearAll();
-      this.router.navigate(['/reset-password'], {
-        queryParams: { token: this.otpToken },
-      });
-      return;
-    }
+      forkJoin([
+        this.authService.sendOtp(contact),
+        this.authService.forgotPassword(contact),
+      ]).subscribe({
+        next: ([otpRes, forgotRes]) => {
+          this.otpSent = true;
+          this.otpToken = otpRes?.otp || '123456';
+          this.resetToken = forgotRes?.resetToken || 'fallback_reset_token';
 
-    if (this.isOtpMode) {
-      if (!this.otpSent) {
-        this.toast.loading('Sending OTP...');
-        this.authService.sendOtp(contact).subscribe({
-          next: (res) => {
-            this.otpSent = true;
-            this.otpToken = res.otp || '123456';
-            this.startTimer();
-            this.resetOtpValidators();
-            this.toast.clearAll();
-            this.toast.success(`OTP sent to ${contact}`);
-          },
-          error: (err) => {
-            this.toast.clearAll();
-            this.toast.error(
-              `Error: ${err.error.message || 'Failed to send OTP'}`
-            );
-          },
-        });
-        return;
-      }
+          this.startTimer();
+          this.resetOtpValidators();
 
-      this.toast.loading('Verifying OTP...');
-      this.authService.verifyOtp(contact, otp).subscribe({
-        next: () => {
-          //this.authService.login();
           this.toast.clearAll();
-          this.toast.success('OTP verified. Logging in...');
-
-        //  this.router.navigate(['/home']);
+          this.toast.success(`OTP sent to ${contact}: ${this.otpToken}`);
         },
         error: (err) => {
           this.toast.clearAll();
           this.toast.error(
-            `OTP verification failed: ${err.error.message || 'Invalid OTP'}`
+            `Error: ${
+              err?.error?.message || 'Failed to send OTP or reset token'
+            }`
           );
         },
       });
+
       return;
     }
 
-    // Password login
-    this.toast.loading('Logging in...');
-    this.authService.loginUser(contact, password,rememberMe).subscribe({
-      next: (res) => {
-        // this.authService.login();
+    //Verify OTP before navigating to reset-password page
+    this.toast.loading('Verifying OTP...');
+    this.authService.verifyOtp(contact, otp).subscribe({
+      next: () => {
         this.toast.clearAll();
-        this.toast.success('Login successful!');
-   
-        //this.router.navigate(['/home']);
+        this.toast.success('OTP verified. Redirecting to reset page...');
+        this.router.navigate(['/reset-password'], {
+          queryParams: { token: this.resetToken , conatct:contact },
+        });
       },
       error: (err) => {
         this.toast.clearAll();
         this.toast.error(
-          `Login failed: ${err?.error?.message || 'Invalid credentials'}`
+          `OTP verification failed: ${err?.error?.message || 'Invalid OTP'}`
         );
       },
     });
+
+    return;
   }
+
+  // DIRECT OTP LOGIN FLOW
+  if (this.isOtpMode) {
+    if (!this.otpSent) {
+      this.toast.loading('Sending OTP...');
+
+      this.authService.sendOtp(contact).subscribe({
+        next: (res) => {
+          this.otpSent = true;
+          this.otpToken = res.otp || '123456';
+
+          this.startTimer();
+          this.resetOtpValidators();
+
+          this.toast.clearAll();
+          this.toast.success(`OTP sent to ${contact}: ${this.otpToken}`);
+        },
+        error: (err) => {
+          this.toast.clearAll();
+          this.toast.error(
+            `Error: ${err?.error?.message || 'Failed to send OTP'}`
+          );
+        },
+      });
+
+      return;
+    }
+
+    // Verify OTP for login
+    this.toast.loading('Verifying OTP...');
+    this.authService.verifyOtp(contact, otp).subscribe({
+      next: (res) => {
+        this.toast.clearAll();
+        this.toast.success('OTP verified. Logging in...');
+        this.authService.handleLoginResponse(res, rememberMe);
+      },
+      error: (err) => {
+        this.toast.clearAll();
+        this.toast.error(
+          `OTP verification failed: ${err?.error?.message || 'Invalid OTP'}`
+        );
+      },
+    });
+
+    return;
+  }
+
+  // PASSWORD LOGIN FLOW
+  this.toast.loading('Logging in...');
+  this.authService.loginUser(contact, password, rememberMe).subscribe({
+    next: (res) => {
+      this.toast.clearAll();
+      this.toast.success('Login successful!');
+    },
+    error: (err) => {
+      this.toast.clearAll();
+      this.toast.error(
+        `Login failed: ${err?.error?.message || 'Invalid credentials'}`
+      );
+    },
+  });
+}
+
 
   resendOtp(): void {
     this.toast.loading('Resending OTP...');

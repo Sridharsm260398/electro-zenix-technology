@@ -129,7 +129,7 @@ export class AuthService {
     localStorage.setItem('expiration', expirationDate.toISOString());
     localStorage.setItem('userId', userID);
     localStorage.setItem('rememberMe', rememberMe ? 'true' : 'false');
-
+    localStorage.setItem('theme', 'dark');
     const roleStr = Array.isArray(role) ? role.join(',') : role;
     localStorage.setItem('role', roleStr);
   }
@@ -196,7 +196,7 @@ export class AuthService {
     return this.http.post(`${this.apiUrl}${authEndpoints.verifyOtp}`, {
       contact,
       otp,
-    });
+    })
   }
 
   public resetPassword(email: string): Observable<any> {
@@ -204,8 +204,15 @@ export class AuthService {
       email,
     });
   }
+public resetPasswordWithToken(token: string,contact:any, newPassword: string, confirmPassword: string): Observable<any> {
+  return this.http.patch(`${this.apiUrl}${authEndpoints.resetPassword}/${token}`, {
+    contact,
+    newPassword,
+    confirmPassword
+  });
+}
 
-  public forgotPassword(email: string): Observable<any> {
+  public forgotPassword(email: any): Observable<any> {
     return this.http.post(`${this.apiUrl}${authEndpoints.forgotPassword}`, {
       email,
     });

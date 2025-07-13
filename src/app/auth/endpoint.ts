@@ -5,5 +5,5 @@ export const authEndpoints = {
     sendOtp: '/api/v1/users/send-otp',
     verifyOtp: '/api/v1/users/verify-otp',
     forgotPassword: '/api/v1/users/forgot-password',
-    changePassword: '/api/v1/users/change-password'
+    changePassword: '/api/v1/users/update-password'
 }

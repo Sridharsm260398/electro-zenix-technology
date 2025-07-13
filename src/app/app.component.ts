@@ -66,15 +66,29 @@ export class AppComponent {
     //     this.authService.logout();
     //   }
     // })
-  const saved = localStorage.getItem('theme');
-  if (saved === 'dark') {
-    document.body.classList.add('dark-theme');
-  } else {
-    document.body.classList.add('light-theme');
-  }
+  const theme = localStorage.getItem('theme');
+   if (theme === 'dark') {
+      this.enableDark();
+    } else {
+      this.enableLight();
+    }
     const redirectUrl =
       localStorage.getItem('role') === 'admin' ? '/dashboard' : '/home';
     this.router.navigate([redirectUrl]);
     this.authService.autoAuthUser();
+  }
+
+  enableDark(): void {
+    document.body.classList.add('dark-theme');
+    document.body.classList.remove('light-theme');
+    localStorage.setItem('theme', 'dark');
+    
+  }
+
+  enableLight(): void {
+    document.body.classList.remove('dark-theme');
+    document.body.classList.add('light-theme');
+    localStorage.setItem('theme', 'light');
+    
   }
 }
