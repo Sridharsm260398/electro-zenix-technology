@@ -11,11 +11,28 @@
 // @import "ag-grid-community/styles/ag-theme-material.css"; // Material
 // @import "ag-grid-community/styles/ag-theme-quartz.css"; // Quartz (new)
 
-// === Layout Styling ===
 
-/* ========================================
-   GLOBAL THEME VARIABLES & STYLES
-======================================== */
+// Add this to your global stylesheet
+.custom-dialog-container.mat-mdc-dialog-container {
+  // Styles for the dialog panel itself
+  background: transparent !important; // Make the dialog background transparent
+  box-shadow: none !important; // Remove default shadow
+  padding: 0 !important; // Remove default padding
+  overflow: hidden !important; // Ensure content stays within border-radius
+
+  .mdc-dialog__surface {
+    background: transparent !important; // Even deeper transparency for MDC surface
+    box-shadow: none !important;
+    border-radius: 20px !important; // Match dialog content border-radius
+    overflow: hidden;
+  }
+}
+
+.custom-dialog-backdrop.cdk-overlay-backdrop {
+  // Styles for the dialog's backdrop
+  background: rgba(0, 0, 0, 0.6) !important; /* Slightly darker, modern backdrop */
+  backdrop-filter: blur(5px) !important; /* Subtle blur on the background */
+}
 
 :root {
   --overlay-bg: rgba(255, 255, 255, 0.3);
@@ -96,14 +113,3 @@ body {
   transition: all 0.3s ease;
 }
 
-
-// :host {
-//   display: flex;
-//   flex-direction: column;
-//   min-height: 100vh;
-// }
-
-// router-outlet {
-//   flex: 1;
-//   display: block;
-// }

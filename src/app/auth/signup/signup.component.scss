@@ -91,30 +91,6 @@
   }
 }
 
-// .checkboxes {
-//   display: flex;
-//   justify-content: space-between;
-//   align-items: center;
-//   margin-bottom: 0.8rem;
-
-//   mat-checkbox {
-//     color: white;
-
-//     ::ng-deep .mat-checkbox-label {
-//       color: white !important;
-//     }
-
-//     ::ng-deep .mat-checkbox-inner-container {
-//       border-color: white !important;
-//     }
-//     ::ng-deep .mat-internal-form-field > label {
-//       color: white !important;
-//     }
-//     ::ng-deep .mdc-checkbox__background {
-//       border-color: white !important;
-//     }
-//   }
-// }
 
 .checkboxes {
   display: flex;
@@ -138,6 +114,14 @@
     }
     ::ng-deep .mdc-checkbox__background {
       border-color: white !important;
+    }
+     a {
+      color: #007bff;
+      text-decoration: none;
+      margin-left: 4px;
+      &:hover {
+        text-decoration: underline;
+      }
     }
   }
 
@@ -175,6 +159,43 @@
 }
 
 .social-icons {
+.divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: 25px 0;
+  color: #aaa;
+
+  &::before,
+  &::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid #eee;
+  }
+
+  &:not(:empty)::before {
+    margin-right: .5em;
+  }
+
+  &:not(:empty)::after {
+    margin-left: .5em;
+  }
+}
+.google-signup-section {
+  margin-bottom: 15px;
+  p {
+    color: #999393;
+   // margin-bottom: 15px;
+    font-size: 15px;
+  }
+  #google-signup-button {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+}
+
+
   margin-top: 1rem;
 
   span {

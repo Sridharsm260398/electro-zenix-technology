@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, NgZone, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router'
 import { NzIconModule } from 'ng-zorro-antd/icon';
@@ -9,7 +9,11 @@ import { MatButtonModule } from '@angular/material/button';
 import { AuthService } from '../auth.service';
 import { HttpClient } from '@angular/common/http';
 import { ToastService } from '../../shared/toast.service';
+import { TermsAndConditionsDialogComponent } from '../../components/terms-and-conditions-dialog/terms-and-conditions-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
+import { filter } from 'rxjs';
 
+declare const google: any;
 @Component({
   selector: 'app-signup',
   standalone: true,
@@ -30,8 +34,19 @@ export class SignupComponent implements OnInit {
   signupForm!: FormGroup;
   submitted = false;
 
-  constructor(private router: Router, private fb: FormBuilder, private authService: AuthService ,private toast:ToastService) 
+  constructor(private dialog: MatDialog,private ngZone: NgZone ,private router: Router, private fb: FormBuilder, private authService: AuthService ,private toast:ToastService) 
   {
+
+        window.google.accounts.id.renderButton(
+      document.getElementById('google-signup-button'), 
+      {
+        type: 'standard',
+        size: 'large',
+        text: 'signup_with', 
+        shape: 'rectangular',
+        theme: 'outline',
+        logo_alignment: 'left'
+      })
         this.signupForm = this.fb.group(
       {
         fullName: ['', Validators.required],
@@ -53,6 +68,26 @@ export class SignupComponent implements OnInit {
   }
 
   ngOnInit(): void {
+  //     google.accounts.id.initialize({
+  //   client_id: '353053747362-c0n27mj9jvj2h6bhu01b4r9fgn68vo46.apps.googleusercontent.com',
+  //      callback: this.handleGoogleCallback.bind(this)
+  // });
+
+  // google.accounts.id.renderButton(
+  //   document.getElementById("googleBtn"),
+  //   { theme: "outline", size: "large" }  // customization
+  // );
+    window.google.accounts.id.renderButton(
+      document.getElementById('google-signup-button'), 
+      {
+        type: 'standard',
+        size: 'large',
+        text: 'signup_with', 
+        shape: 'rectangular',
+        theme: 'outline',
+        logo_alignment: 'left'
+      }
+    );
     // this.signupForm = this.fb.group(
     //   {
     //     fullName: ['', Validators.required],
@@ -71,6 +106,101 @@ export class SignupComponent implements OnInit {
     //   },
     //   { validators: this.passwordMatchValidator }
     // );
+  }
+
+// triggerGoogleLogin() {
+//   google.accounts.id.initialize({
+//     client_id: '353053747362-c0n27mj9jvj2h6bhu01b4r9fgn68vo46.apps.googleusercontent.com',
+//        callback: this.handleGoogleCallback.bind(this)
+//   });
+
+//   google.accounts.id.renderButton(
+//     document.getElementById("googleBtn"),
+//     { theme: "outline", size: "large" }  // customization
+//   ); // or showPopup or renderButton
+// }
+
+// handleGoogleCallback(response: any) {
+//   const idToken = response.credential;
+
+//   this.authService.loginWithGoogle(idToken).subscribe({
+//     next: (res) => {
+//       this.toast.success('Logged in with Google');
+//       this.router.navigate(['/home']);
+//     },
+//     error: (err) => {
+//       this.toast.error(err.error.message || 'Google login failed');
+//     }
+//   });
+// }
+  ngAfterViewInit(): void {
+    if (window.google) {
+      this.initializeGoogleSignUp();
+    } else {
+      console.warn('Google Identity Services script not loaded.');
+    }
+  }
+
+  private initializeGoogleSignUp(): void {
+    window.handleCredentialResponse = (response: any) => {
+      this.ngZone.run(() => { 
+        this.handleGoogleSignUpCallback(response);
+      });
+    };
+
+    window.google.accounts.id.initialize({
+      client_id: '353053747362-c0n27mj9jvj2h6bhu01b4r9fgn68vo46.apps.googleusercontent.com',
+      callback: window.handleCredentialResponse, 
+      auto_select: false,
+      context: 'signup'
+    });
+
+    window.google.accounts.id.renderButton(
+      document.getElementById('google-signup-button'), 
+      {
+        type: 'standard',
+        size: 'large',
+        text: 'signup_with', 
+        shape: 'rectangular',
+        theme: 'outline',
+        logo_alignment: 'left'
+      }
+    );
+
+    // Optional: Prompt One Tap for sign-up
+    // google.accounts.id.prompt((notification: any) => {
+    //   if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
+    //     console.log('One Tap not shown on registration:', notification.getNotDisplayedReason());
+    //   }
+    // });
+  }
+
+  handleGoogleSignUpCallback(response: any) {
+    const idToken = response.credential;
+    if (idToken) {
+      this.authService.googleSignUp(idToken).subscribe({
+        next: (res) => {
+          this.toast.success('Signed up with Google successfully!');
+          // After Google signup, profile is likely incomplete (missing phone)
+          if (!res.data.user.isProfileComplete) {
+            this.router.navigate(['/login']);
+       //     this.router.navigate(['/complete-profile']);
+          } else {
+            // This case might occur if account was linked/merged
+            this.router.navigate(['/dashboard']);
+          }
+        },
+        error: (err) => {
+          console.error('Google Sign-Up failed:', err);
+          this.toast.error(err.error?.message || 'Google Sign-Up failed. Please try again.');
+          if (err.status === 409) { // Conflict: user exists
+            this.router.navigate(['/login']); // Prompt to login
+          }
+        },
+      });
+    } else {
+      this.toast.error('Google credential not found.');
+    }
   }
 
   get f() {
@@ -110,6 +240,26 @@ export class SignupComponent implements OnInit {
     }
   });
 }
+// --- Method to open the dialog ---
+  openTermsAndConditionsDialog(): void {
+    const dialogRef = this.dialog.open(TermsAndConditionsDialogComponent, {
+      width: '800px', 
+      maxWidth: '90vw', 
+      height: 'auto',
+      maxHeight: '90vh',
+      panelClass: 'custom-dialog-container', 
+      backdropClass: 'custom-dialog-backdrop', 
+      disableClose: true, 
+    });
 
+    dialogRef.afterClosed().pipe(
+      filter(result => result === true) 
+    ).subscribe(result => {
+      if (result) {
+        this.signupForm.controls['terms'].setValue(true);
+        this.toast.info('Terms and Conditions accepted!');
+      }
+    });
+  }
 }
 

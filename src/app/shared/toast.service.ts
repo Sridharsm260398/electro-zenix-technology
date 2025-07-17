@@ -17,7 +17,7 @@ export class ToastService {
     this.message.error(msg, { nzDuration: duration });
   }
 
-  warning(msg: string, duration = 3000): void {
+  warning(msg: string, duration = 5000): void {
     this.message.warning(msg, { nzDuration: duration });
   }
 

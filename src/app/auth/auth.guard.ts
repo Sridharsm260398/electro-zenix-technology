@@ -3,11 +3,13 @@ import {
   ActivatedRouteSnapshot,
   RouterStateSnapshot,
   Router,
+  UrlTree // Import UrlTree for returning a redirect URL
 } from '@angular/router';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { map, take } from 'rxjs/operators'; // Import map and take operators
 
-import { AuthService } from './auth.service';
+import { AuthService } from './auth.service'; // Ensure this path is correct
 
 @Injectable({ providedIn: 'root' })
 export class AuthGuard implements CanActivate {
@@ -16,29 +18,50 @@ export class AuthGuard implements CanActivate {
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
-  ): boolean | Observable<boolean> | Promise<boolean> {
-    //Use persistent auth check
-    const isAuth = this.authService.isAuthenticatedStatus();
-
-    // Get role from either storage
-    const role =
-      localStorage.getItem('role') || '';
+  ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
 
     const allowedRoles = route.data['roles'] as string[] | undefined;
 
-    //Not logged in
-    if (!isAuth) {
-      this.router.navigate(['/login']);
-      return false;
-    }
+    return this.authService.isAuthenticated$.pipe(
+      take(1), // Get the current authentication status and complete
+      map(isAuthenticated => {
+        // 1. Check if the user is authenticated
+        if (!isAuthenticated) {
+          console.log('AuthGuard: Not authenticated, redirecting to /login');
+          return this.router.createUrlTree(['/login']);
+        }
 
-    // Role not allowed
-    if (allowedRoles && !allowedRoles.includes(role)) {
-      this.router.navigate(['/']);
-      return false;
-    }
+        // 2. If authenticated, check for role-based access control
+        // Retrieve the user's current role using the new synchronous method
+        const userRole = this.authService.getCurrentRole();
 
-    // Authenticated and authorized
-    return true;
+        // If the route has specific roles defined AND the user's role is not among them
+        if (allowedRoles && !this.checkUserRole(userRole, allowedRoles)) {
+          console.log('AuthGuard: Authenticated but role not allowed, redirecting to /');
+          return this.router.createUrlTree(['/']); // Or '/unauthorized'
+        }
+
+        // 3. If authenticated and authorized by role, allow access to the route
+        console.log('AuthGuard: Authenticated and authorized, allowing access');
+        return true;
+      })
+    );
+  }
+
+  /**
+   * Helper function to check if the user's role matches any of the allowed roles.
+   * Handles both single string roles and array of roles for the user.
+   * @param userRole The role(s) of the current user (string or string[]).
+   * @param allowedRoles The roles allowed for the route (string[]).
+   * @returns true if the user's role is allowed, false otherwise.
+   */
+  private checkUserRole(userRole: string | string[], allowedRoles: string[]): boolean {
+    if (Array.isArray(userRole)) {
+      // If user has multiple roles, check if any of them are in allowedRoles
+      return userRole.some(role => allowedRoles.includes(role));
+    } else {
+      // If user has a single role, check if it's in allowedRoles
+      return allowedRoles.includes(userRole);
+    }
   }
 }

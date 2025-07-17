@@ -161,6 +161,42 @@ mat-checkbox {
 }
 
 .social-icons {
+.divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: 25px 0;
+  color: #aaa;
+
+  &::before,
+  &::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid #eee;
+  }
+
+  &:not(:empty)::before {
+    margin-right: .5em;
+  }
+
+  &:not(:empty)::after {
+    margin-left: .5em;
+  }
+}
+.google-signup-section {
+  margin-bottom: 25px;
+  p {
+    color: #555;
+    margin-bottom: 15px;
+    font-size: 15px;
+  }
+  #google-signin-button {
+    display: flex;
+    justify-content: center;
+  }
+}
+
+
   margin-top: 1rem;
 
   span {
