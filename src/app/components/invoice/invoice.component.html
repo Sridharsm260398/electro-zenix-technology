@@ -1,0 +1,136 @@
+<nz-card class="invoice-card" nzTitle="TAX INVOICE">
+  <!-- Company Section -->
+  <div class="company-section">
+    <img src="assets/img/company_logo.png" class="company-logo" alt="logo" />
+    <div class="company-details">
+      <input nz-input [(ngModel)]="invoiceData.company.name" placeholder="Company Name" />
+      <textarea nz-input [(ngModel)]="invoiceData.company.address" placeholder="Address"></textarea>
+      <input nz-input [(ngModel)]="invoiceData.company.gst" placeholder="GSTIN" />
+      <input nz-input [(ngModel)]="invoiceData.company.contact" placeholder="Contact" />
+      <input nz-input [(ngModel)]="invoiceData.company.email" placeholder="Email" />
+    </div>
+  </div>
+
+  <!-- Invoice Meta -->
+  <div class="meta">
+    <label><b>Invoice #</b></label>
+    <input nz-input [(ngModel)]="invoiceData.invoiceNo" readonly />
+
+    <label><b>Invoice Date</b></label>
+    <nz-date-picker
+      [(ngModel)]="invoiceData.invoiceDate"
+      nzFormat="dd/MM/yyyy"
+      (ngModelChange)="calculateTotals()"
+    ></nz-date-picker>
+
+    <label><b>Due Date</b></label>
+    <nz-date-picker
+      [(ngModel)]="invoiceData.dueDate"
+      nzFormat="dd/MM/yyyy"
+      (ngModelChange)="calculateTotals()"
+    ></nz-date-picker>
+
+    <label><b>Terms</b></label>
+    <input nz-input [(ngModel)]="invoiceData.terms" placeholder="Terms" />
+
+    <label><b>P.O.#</b></label>
+    <input nz-input [(ngModel)]="invoiceData.poNo" placeholder="P.O. #" />
+
+    <label><b>Place Of Supply</b></label>
+    <input nz-input [(ngModel)]="invoiceData.placeOfSupply" placeholder="Place Of Supply" />
+  </div>
+
+  <!-- Bill To -->
+  <div class="bill-to">
+    <h4>Bill To:</h4>
+    <input nz-input [(ngModel)]="invoiceData.billTo" placeholder="Customer / Company Name" />
+  </div>
+
+  <!-- Items Table -->
+  <nz-table [nzBordered]="true" [nzSize]="'middle'">
+    <thead>
+      <tr>
+        <th>Item & Description</th>
+        <th>HSN/SAC</th>
+        <th>Qty</th>
+        <th>Rate</th>
+        <th>CGST%</th>
+        <th>SGST%</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of invoiceData.items; let i = index">
+        <td><input nz-input [(ngModel)]="item.description" placeholder="Description" /></td>
+        <td><input nz-input [(ngModel)]="item.hsn" placeholder="HSN/SAC" /></td>
+        <td>
+          <input
+            nz-input
+            type="number"
+            [(ngModel)]="item.qty"
+            (ngModelChange)="calculateTotals()"
+            min="1"
+          />
+        </td>
+        <td>
+          <input
+            nz-input
+            type="number"
+            [(ngModel)]="item.rate"
+            (ngModelChange)="calculateTotals()"
+            min="0"
+          />
+        </td>
+        <td>
+          <input
+            nz-input
+            type="number"
+            [(ngModel)]="item.cgst"
+            (ngModelChange)="calculateTotals()"
+            min="0"
+          />
+        </td>
+        <td>
+          <input
+            nz-input
+            type="number"
+            [(ngModel)]="item.sgst"
+            (ngModelChange)="calculateTotals()"
+            min="0"
+          />
+        </td>
+        <td>
+          <button nz-button nzType="default" nzDanger (click)="removeItem(i)">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </nz-table>
+
+  <button nz-button nzType="dashed" (click)="addItem()">+ Add Item</button>
+
+  <!-- Totals -->
+  <div class="totals">
+    <p><b>Sub Total:</b> ₹{{ subTotal | number: '1.2-2' }}</p>
+    <p><b>CGST:</b> ₹{{ cgstTotal | number: '1.2-2' }}</p>
+    <p><b>SGST:</b> ₹{{ sgstTotal | number: '1.2-2' }}</p>
+    <p class="highlight"><b>Total:</b> ₹{{ total | number: '1.2-2' }}</p>
+    <label><b>Payment Made:</b>
+      <input
+        nz-input
+        type="number"
+        [(ngModel)]="invoiceData.paymentMade"
+        (ngModelChange)="calculateTotals()"
+      />
+    </label>
+    <p><b>Balance Due:</b> ₹{{ balanceDue | number: '1.2-2' }}</p>
+    <p class="words"><i>Total In Words:</i> {{ totalInWords }}</p>
+  </div>
+
+  <!-- Notes & Signature -->
+  <div class="notes">
+    <textarea nz-input [(ngModel)]="invoiceData.notes" placeholder="Notes"></textarea>
+    <p class="sign">Authorized Signature</p>
+  </div>
+
+  <button nz-button nzType="primary" (click)="generatePDF()">Download PDF</button>
+</nz-card>

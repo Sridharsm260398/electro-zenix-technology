@@ -18,6 +18,14 @@ import en from '@angular/common/locales/en';
 
 // Ng-Zorro icons (add more if needed)
 import {
+  HomeOutline,
+  MailOutline,
+  PhoneOutline,
+  CreditCardOutline,
+  EditOutline,
+  DeleteOutline,
+  ControlOutline,
+  SafetyOutline,
   FacebookFill,
   GoogleOutline,
   TwitterOutline,
@@ -33,6 +41,9 @@ import {
   LogoutOutline,
   ClockCircleOutline,
   TeamOutline,
+  FileAddFill,
+  FileFill,
+  FileAddOutline,
 } from '@ant-design/icons-angular/icons';
 
 import { IconDefinition } from '@ant-design/icons-angular';
@@ -61,17 +72,10 @@ const icons: IconDefinition[] = [
   TeamOutline,
   ControlOutline,
   SafetyOutline,
+  FileAddFill,
+  FileFill,
+  FileAddOutline,
 ];
-import {
-  HomeOutline,
-  MailOutline,
-  PhoneOutline,
-  CreditCardOutline,
-  EditOutline,
-  DeleteOutline,
-  ControlOutline,
-  SafetyOutline,
-} from '@ant-design/icons-angular/icons';
 import {
   HTTP_INTERCEPTORS,
   HttpClient,
@@ -80,7 +84,7 @@ import {
 } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
-import { LoadingInterceptor } from './shared/loading.interceptor';
+import { LoadingInterceptor } from './shared/components/interceptors/loading.interceptor';
 import { NgxSpinnerModule } from 'ngx-spinner';
 
 registerLocaleData(en);

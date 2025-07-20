@@ -86,6 +86,15 @@ export const routes: Routes = [
           ),
       },
       {
+        path: 'invoice',
+        canActivate: [AuthGuard],
+        data: { roles: ['admin'] },
+        loadComponent: () =>
+          import('./components/invoice/invoice.component').then(
+            (m) => m.InvoiceComponent
+          ),
+      },
+      {
         path: 'admin',
         canActivate: [AuthGuard],
         data: { roles: ['admin'] }, // only admins can access

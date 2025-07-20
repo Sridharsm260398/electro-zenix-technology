@@ -73,14 +73,14 @@ body {
   background: url("/assets/img/img15.jpg") no-repeat center center fixed;
   background-size: cover;
   backdrop-filter: blur(20px);
-
   &::before {
     content: "";
     position: absolute;
     inset: 0;
     backdrop-filter: var(--glass-blur);
     background: var(--overlay-bg);
-    z-index: -1;
+z-index: -1;
+   
   }
 
   .content {
@@ -96,6 +96,7 @@ body {
     padding-top: 0 !important;
   }
 }
+
 
 /* ========================================
    SHARED GLASS CONTAINER CLASS (OPTIONAL)

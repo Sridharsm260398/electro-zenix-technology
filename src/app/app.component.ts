@@ -4,7 +4,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { Router, NavigationStart, NavigationEnd, NavigationCancel, NavigationError } from '@angular/router'; // Import Router events
 import { MatSnackBar } from '@angular/material/snack-bar'; // Import MatSnackBar
-import { NgxSpinnerService } from 'ngx-spinner'; // Import NgxSpinnerService
+import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner'; // Import NgxSpinnerService
 import { filter } from 'rxjs/operators'; // Import filter operator
 import { CommonModule } from '@angular/common'; // Required for CommonModule
 import { RouterOutlet } from '@angular/router'; // Required for RouterOutlet
@@ -21,7 +21,8 @@ import { AuthService } from './auth/auth.service';
     RouterOutlet,
     NavbarComponent,
     FooterComponent,
-    NgxSpinnerComponent, // Make sure NgxSpinnerComponent is imported if used directly in template
+    NgxSpinnerModule,
+   // NgxSpinnerComponent, 
   ],
   providers: [], // Providers specific to this component if any
   templateUrl: './app.component.html', // Reference to your HTML template
@@ -43,7 +44,6 @@ export class AppComponent implements OnInit, OnDestroy {
     private snackBar: MatSnackBar,
     private spinner: NgxSpinnerService // Inject NgxSpinnerService
   ) {
-    // Logic for showing/hiding spinner during route changes
     this.routerEventsSubscription = this.router.events.subscribe((event) => {
       if (event instanceof NavigationStart) {
         this.spinner.show(); // Show spinner on navigation start
@@ -55,13 +55,12 @@ export class AppComponent implements OnInit, OnDestroy {
         this.spinner.hide(); // Hide spinner on navigation end, cancel, or error
       }
     });
-
-    // Logic for showing/hiding footer and determining admin page
+ // const userRole = this.authService.getCurrentRole();
+  //this.isAdminPage = userRole === 'admin' ? true : false ;
     this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
-      .subscribe((event: NavigationEnd) => {
-        this.isAdminPage = this.router.url.startsWith('/dashboard');
-        const hiddenRoutes = ['/login', '/signup', '/reset-password'];
+      .subscribe((event: NavigationEnd) => {  
+        this.isAdminPage = this.router.url.startsWith('/dashboard');                const hiddenRoutes = ['/login', '/signup', '/reset-password'];
         this.showFooter = !hiddenRoutes.includes(event.urlAfterRedirects);
       });
   }
@@ -75,36 +74,31 @@ export class AppComponent implements OnInit, OnDestroy {
       this.enableLight();
     }
 
-    // Initiate auto-authentication on app startup.
-    // This method handles checking existing tokens and navigating to the correct route.
     this.authService.autoAuthUser();
 
-    // Subscribe to authentication status changes from AuthService to update UI
     this.authSubscription = this.authService.isAuthenticated$.subscribe(
       (status: boolean) => {
         this.isAuthenticated = status;
       }
     );
 
-    // Subscribe to cross-tab logout events to display a MatSnackBar notification
+
     this.crossTabLogoutSubscription = this.authService.crossTabLogout$.subscribe(() => {
       this.snackBar.open('You have been logged out from another tab.', 'Dismiss', {
-        duration: 5000, // Snackbar will disappear after 5 seconds
-        panelClass: ['snackbar-error'] // Custom CSS class for styling the snackbar
+        duration: 5000, 
+        panelClass: ['snackbar-error']
       });
     });
   }
 
-  // Method to handle user logout
   onLogout(): void {
     this.authService.logout();
   }
 
-  // Lifecycle hook to unsubscribe from observables and prevent memory leaks
   ngOnDestroy(): void {
     this.authSubscription?.unsubscribe();
     this.crossTabLogoutSubscription?.unsubscribe();
-    this.routerEventsSubscription?.unsubscribe(); // Unsubscribe from router events
+    this.routerEventsSubscription?.unsubscribe();
   }
 
   // Methods to enable dark and light themes

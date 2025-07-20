@@ -4,6 +4,6 @@ export interface UserData {
   name: string;
   email: string;
   contact: string;
-role: string[];
+  role: string[];
   message: string;
 }

@@ -23,25 +23,19 @@ export class AuthGuard implements CanActivate {
     const allowedRoles = route.data['roles'] as string[] | undefined;
 
     return this.authService.isAuthenticated$.pipe(
-      take(1), // Get the current authentication status and complete
+      take(1),
       map(isAuthenticated => {
-        // 1. Check if the user is authenticated
         if (!isAuthenticated) {
           console.log('AuthGuard: Not authenticated, redirecting to /login');
           return this.router.createUrlTree(['/login']);
         }
 
-        // 2. If authenticated, check for role-based access control
-        // Retrieve the user's current role using the new synchronous method
         const userRole = this.authService.getCurrentRole();
-
-        // If the route has specific roles defined AND the user's role is not among them
         if (allowedRoles && !this.checkUserRole(userRole, allowedRoles)) {
           console.log('AuthGuard: Authenticated but role not allowed, redirecting to /');
-          return this.router.createUrlTree(['/']); // Or '/unauthorized'
+          return this.router.createUrlTree(['/']); 
         }
 
-        // 3. If authenticated and authorized by role, allow access to the route
         console.log('AuthGuard: Authenticated and authorized, allowing access');
         return true;
       })
