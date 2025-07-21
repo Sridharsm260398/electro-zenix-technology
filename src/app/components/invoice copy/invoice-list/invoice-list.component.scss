@@ -1,0 +1,33 @@
+.invoice-list-container {
+  padding: 20px;
+}
+
+.add-btn {
+  margin-bottom: 15px;
+}
+
+.btn-view,
+.btn-edit,
+.btn-delete {
+  border: none;
+  padding: 4px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-right: 5px;
+  font-size: 12px;
+}
+
+.btn-view {
+  background: #1890ff;
+  color: white;
+}
+
+.btn-edit {
+  background: #52c41a;
+  color: white;
+}
+
+.btn-delete {
+  background: #ff4d4f;
+  color: white;
+}

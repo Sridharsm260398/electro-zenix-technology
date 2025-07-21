@@ -1,0 +1,83 @@
+<nz-card class="invoice-card" nzTitle="TAX INVOICE">
+  <!-- Company Section -->
+  <div class="company-section">
+    <img src="assets/img/company_logo.png" class="company-logo" alt="logo" />
+    <div class="company-details">
+      <input nz-input [(ngModel)]="invoiceData.company.name" disabled />
+      <textarea nz-input [(ngModel)]="invoiceData.company.address" disabled></textarea>
+      <input nz-input [(ngModel)]="invoiceData.company.gst" disabled />
+      <input nz-input [(ngModel)]="invoiceData.company.contact" disabled />
+      <input nz-input [(ngModel)]="invoiceData.company.email" disabled />
+    </div>
+  </div>
+
+  <!-- Invoice Meta -->
+  <div class="meta">
+    <label><b>Invoice #</b></label>
+    <input nz-input [(ngModel)]="invoiceData.invoiceNo" disabled />
+
+    <label><b>Invoice Date</b></label>
+    <nz-date-picker [(ngModel)]="invoiceData.invoiceDate" nzFormat="dd/MM/yyyy" disabled></nz-date-picker>
+
+    <label><b>Due Date</b></label>
+    <nz-date-picker [(ngModel)]="invoiceData.dueDate" nzFormat="dd/MM/yyyy" disabled></nz-date-picker>
+
+    <label><b>Terms</b></label>
+    <input nz-input [(ngModel)]="invoiceData.terms" disabled />
+
+    <label><b>P.O.#</b></label>
+    <input nz-input [(ngModel)]="invoiceData.poNo" disabled />
+
+    <label><b>Place Of Supply</b></label>
+    <input nz-input [(ngModel)]="invoiceData.placeOfSupply" disabled />
+  </div>
+
+  <!-- Bill To -->
+  <div class="bill-to">
+    <h4>Bill To:</h4>
+    <input nz-input [(ngModel)]="invoiceData.billTo" disabled />
+  </div>
+
+  <!-- Items Table -->
+  <nz-table [nzBordered]="true" [nzSize]="'middle'">
+    <thead>
+      <tr>
+        <th>Item & Description</th>
+        <th>HSN/SAC</th>
+        <th>Qty</th>
+        <th>Rate</th>
+        <th>CGST%</th>
+        <th>SGST%</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of invoiceData.items">
+        <td><input nz-input [(ngModel)]="item.description" disabled /></td>
+        <td><input nz-input [(ngModel)]="item.hsn" disabled /></td>
+        <td><input nz-input type="number" [(ngModel)]="item.qty" disabled /></td>
+        <td><input nz-input type="number" [(ngModel)]="item.rate" disabled /></td>
+        <td><input nz-input type="number" [(ngModel)]="item.cgst" disabled /></td>
+        <td><input nz-input type="number" [(ngModel)]="item.sgst" disabled /></td>
+      </tr>
+    </tbody>
+  </nz-table>
+
+  <!-- Totals -->
+  <div class="totals">
+    <p><b>Sub Total:</b> ₹{{ subTotal | number: '1.2-2' }}</p>
+    <p><b>CGST:</b> ₹{{ cgstTotal | number: '1.2-2' }}</p>
+    <p><b>SGST:</b> ₹{{ sgstTotal | number: '1.2-2' }}</p>
+    <p class="highlight"><b>Total:</b> ₹{{ total | number: '1.2-2' }}</p>
+    <p><b>Payment Made:</b> ₹{{ invoiceData.paymentMade | number: '1.2-2' }}</p>
+    <p><b>Balance Due:</b> ₹{{ balanceDue | number: '1.2-2' }}</p>
+    <p class="words"><i>Total In Words:</i> {{ totalInWords }}</p>
+  </div>
+
+  <!-- Notes & Signature -->
+  <div class="notes">
+    <textarea nz-input [(ngModel)]="invoiceData.notes" disabled></textarea>
+    <p class="sign">Authorized Signature</p>
+  </div>
+
+  <button nz-button nzType="primary" (click)="downloadPDF()">Download PDF</button>
+</nz-card>

@@ -48,14 +48,13 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./auth/login/login.component').then((m) => m.LoginComponent),
   },
- 
+
   {
     path: 'signup',
     loadComponent: () =>
       import('./auth/signup/signup.component').then((m) => m.SignupComponent),
   },
 
- 
   {
     path: 'reset-password',
     loadComponent: () =>
@@ -67,9 +66,11 @@ export const routes: Routes = [
   {
     path: 'dashboard',
     canActivate: [AuthGuard],
-    data: { roles: ['admin'] }, 
+    data: { roles: ['admin'] },
     loadComponent: () =>
-      import('./components/dashboard/dashboard.component').then((m) => m.DashboardComponent),
+      import('./components/dashboard/dashboard.component').then(
+        (m) => m.DashboardComponent
+      ),
     children: [
       {
         path: '',
@@ -95,11 +96,40 @@ export const routes: Routes = [
           ),
       },
       {
+        path: 'invoice-list',
+        canActivate: [AuthGuard],
+        data: { roles: ['admin'] },
+        loadComponent: () =>
+          import(
+            './components/invoice/invoice-list/invoice-list.component'
+          ).then((m) => m.InvoiceListComponent),
+      },
+      {
+        path: 'invoice/edit/:id',
+        canActivate: [AuthGuard],
+        data: { roles: ['admin'] },
+        loadComponent: () =>
+          import(
+            './components/invoice/invoice-edit/invoice-edit.component'
+          ).then((m) => m.InvoiceEditComponent),
+      },
+      {
+        path: 'invoice/view/:id',
+        canActivate: [AuthGuard],
+        data: { roles: ['admin'] },
+        loadComponent: () =>
+          import(
+            './components/invoice/invoice-view/invoice-view.component'
+          ).then((m) => m.InvoiceViewComponent),
+      },
+      {
         path: 'admin',
         canActivate: [AuthGuard],
         data: { roles: ['admin'] }, // only admins can access
         loadComponent: () =>
-          import('./components/admin/admin.component').then((m) => m.AdminComponent),
+          import('./components/admin/admin.component').then(
+            (m) => m.AdminComponent
+          ),
       },
     ],
   },
@@ -108,5 +138,5 @@ export const routes: Routes = [
   {
     path: '**',
     redirectTo: '',
-  }
+  },
 ];

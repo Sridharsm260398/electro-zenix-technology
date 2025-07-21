@@ -28,6 +28,8 @@ import {
   themeQuartz,
 } from 'ag-grid-community';
 import { NzIconModule } from 'ng-zorro-antd/icon';
+import { AuthService } from '../../auth/auth.service';
+import { ToastService } from '../../shared/toast.service';
 
 @Component({
   selector: 'app-admin',
@@ -51,6 +53,8 @@ export class AdminComponent {
   dialog = inject(MatDialog);
   snack = inject(MatSnackBar);
   nzModal = inject(NzModalService);
+  authService = inject(AuthService)
+  toastService = inject(ToastService)
   gridApi!: GridApi;
   pageSize = 20;
   themes = [
@@ -64,17 +68,6 @@ export class AdminComponent {
   @ViewChild('gridRef') grid!: AgGridAngular;
   activeTab = 'users';
 
-  rowData = signal<UserData[]>(
-    Array.from({ length: 50 }, (_, i) => ({
-      id: i + 1,
-      name: 'Sridhar S M',
-      email: `sridhar${i}@gmail.com`,
-      contact: '+91-9686802325',
-      role: ['User'],
-      message: 'Electro zenix technology.',
-    }))
-  );
-
   defaultColDef: ColDef = {
     sortable: true,
     filter: true,
@@ -82,42 +75,45 @@ export class AdminComponent {
     editable: false,
   };
 
+  rowData = signal<UserData[]>([]); 
   columnDefs: ColDef[] = [
     { field: 'name', headerName: 'Full Name' },
     { field: 'email', headerName: 'Email' },
-    { field: 'contact', headerName: 'Contact' },
-    {
-      field: 'role',
-      headerName: 'Roles',
-      cellRenderer: (params: any) => {
-        const roles = Array.isArray(params.value)
-          ? params.value
-          : [params.value];
-        return roles
-          .map((role: string) => {
-            const cls = `nz-tag role-${role.toLowerCase()}`;
-            return `<nz-tag class='${cls}'>${role}</nz-tag>`;
-          })
-          .join(' ');
-      },
-    },
-    {
-      field: 'message',
-      headerName: 'Message',
-      flex: 2,
-    },
+    { field: 'phone', headerName: 'Contact' },
+{
+  field: 'role',
+  headerName: 'Roles',
+  cellRenderer: (params: any) => {
+    let roles: string[] = [];
+
+    if (Array.isArray(params.value)) {
+      roles = params.value.flat().map((r: any) => String(r).trim());
+    } else if (typeof params.value === 'string') {
+      roles = params.value.split(',').map((r:any) => r.trim());
+    } else if (params.value) {
+      roles = [String(params.value).trim()];
+    }
+
+    return roles
+      .map((role: string) => {
+        const safeRole = role.toLowerCase();
+        const cls = `nz-tag role-${safeRole}`;
+        return `<nz-tag class="${cls}">${role}</nz-tag>`;
+      })
+      .join(' ');
+  },
+},
+    { field: 'message', headerName: 'Message' },
     {
       headerName: 'Actions',
-    cellRenderer: () => `
-  <span class="link-action edit" data-action="edit">
-    <i nz-icon class="anticon" nzType="edit" nzTheme="outline"></i> Edit
-  </span> 
-  <span class="link-action delete" data-action="delete">
-    <i nz-icon class="anticon" nzType="delete" nzTheme="outline"></i> Delete
-  </span>
-`,
-
-
+      cellRenderer: () => `
+        <span class="link-action edit" data-action="edit">
+          <i nz-icon class="anticon" nzType="edit" nzTheme="outline"></i> Edit
+        </span> 
+        <span class="link-action delete" data-action="delete">
+          <i nz-icon class="anticon" nzType="delete" nzTheme="outline"></i> Delete
+        </span>
+      `,
       onCellClicked: (params: any) => {
         const action = params.event.target?.getAttribute('data-action');
         if (action === 'edit') this.openEditDialog(params.data);
@@ -126,31 +122,150 @@ export class AdminComponent {
     },
   ];
 
-  switchTab(tab: string) {
+  ngOnInit() {
+    this.loadUsers();
+  }
+
+  loadUsers() {
+    this.authService.getAllUsers().subscribe({
+      next: (res: any) => {
+        const users = res?.data?.data || [];
+        this.rowData.set(
+          users.map((u: any) => ({
+            id: u._id,
+            name: u.fullName,
+            email: u.email,
+            phone: u.phone,
+            role: [u.role], // wrap in array for tags
+            message: `Profile ${u.isProfileComplete ? 'Complete' : 'Incomplete'}`,
+          }))
+        );
+        this.toastService.success('Users loaded successfully');
+      },
+      error: () => {
+        this.toastService.error('Failed to load users');
+      },
+    });
+  }
+
+
+switchTab(tab: string) {
     this.activeTab = tab;
   }
-
-  openEditDialog(user?: UserData) {
-    const dialogRef = this.dialog.open(AdminEditDialogComponent, {
-      width: '500px',
-      data: { user: user ? { ...user } : null },
-      panelClass: 'dialog-glass',
-    });
-
-    dialogRef.afterClosed().subscribe((result: UserData | undefined) => {
-      if (result) {
-        if (user) {
-          this.rowData.update((users) =>
-            users.map((u) => (u.id === user.id ? result : u))
-          );
-          this.snack.open('User Updated', 'Close', { duration: 3000 });
-        } else {
-          result.id = Date.now();
-          this.rowData.update((users) => [...users, result]);
-        }
+openEditDialog(user?: UserData) {
+  if (user?.id) {
+    // Editing: Fetch fresh user details from API before opening popup
+    this.authService.getUser(user.id).subscribe({
+      next: (res: any) => {
+        const fetchedUser = res?.data?.data || user;
+        this.openDialog(fetchedUser);
+      },
+      error: () => {
+        this.toastService.error('Failed to fetch user details');
       }
     });
+  } else {
+    // Creating New User
+    this.openDialog();
   }
+}
+
+private openDialog(user?: any) {
+  const mappedUser = user
+    ? {
+        id: user.id || user._id,
+        name: user.name || user.fullName,
+        email: user.email,
+        phone: user.phone,
+        role: Array.isArray(user.role) ? user.role : [user.role],
+        message: user.message || `Profile ${user.isProfileComplete ? 'Complete' : 'Incomplete'}`,
+      }
+    : null;
+
+  const dialogRef = this.dialog.open(AdminEditDialogComponent, {
+    width: '500px',
+    data: { user: mappedUser },
+    panelClass: 'dialog-glass',
+  });
+
+  dialogRef.afterClosed().subscribe((result: UserData | undefined) => {
+    if (result) {
+      if (user) {
+        this.updateUser(user._id, result);
+      } else {
+        this.createUser(result);
+      }
+    }
+  });
+}
+
+updateUser(id: string, updatedData: UserData) {
+  const apiPayload = {
+    fullName: updatedData.name,
+    email: updatedData.email,
+    phone: updatedData.phone,
+    role: updatedData.role,
+  };
+
+  this.authService.updateUser(id, apiPayload).subscribe({
+    next: () => {
+      this.rowData.update((users) =>
+        users.map((u) => (u.id === id ? { ...updatedData, id } : u))
+      );
+      this.toastService.success('User updated successfully');
+    },
+    error: () => {
+      this.toastService.error('Failed to update user');
+    },
+  });
+}
+
+createUser(newUser: UserData) {
+  const apiPayload = {
+    fullName: newUser.name,
+    email: newUser.email,
+    phone: newUser.phone,
+    role: newUser.role,
+    terms: true,
+  };
+
+  this.authService.createUser(apiPayload).subscribe({
+    next: (res: any) => {
+      const savedUser = res?.data?.user;
+      this.rowData.update((users) => [
+        ...users,
+        {
+          id: savedUser._id,
+          name: savedUser.fullName,
+          email: savedUser.email,
+          phone: savedUser.phone,
+          role: [savedUser.role],
+          message: `Profile ${
+            savedUser.isProfileComplete ? 'Complete' : 'Incomplete'
+          }`,
+        },
+      ]);
+      this.toastService.success('User created successfully');
+    },
+    error: () => {
+      this.toastService.error('Failed to create user');
+    },
+  });
+}
+
+
+deleteRow(user: UserData) {
+  this.authService.deleteUser(user.id).subscribe({
+    next: () => {
+      this.rowData.update((users) => users.filter((u) => u.id !== user.id));
+      this.toastService.success(`${user.name} deleted successfully`);
+    },
+    error: () => {
+      this.toastService.error('Failed to delete user');
+    }
+  });
+}
+
 
   confirmDelete(user: UserData) {
     this.nzModal.confirm({
@@ -161,11 +276,6 @@ export class AdminComponent {
       nzOnOk: () => this.deleteRow(user),
       nzCancelText: 'Cancel',
     });
-  }
-
-  deleteRow(user: UserData) {
-    this.rowData.update((users) => users.filter((u) => u.id !== user.id));
-    this.snack.open(`${user.name} deleted`, 'Close', { duration: 3000 });
   }
 
   deleteSelected() {
@@ -192,7 +302,7 @@ export class AdminComponent {
 
   exportCSV() {
     exportToCSV(this.rowData());
-    this.snack.open('Exported to CSV', 'Close', { duration: 3000 });
+    this.toastService.success('Exported to CSV');
   }
 
   onGridReady(params: any) {

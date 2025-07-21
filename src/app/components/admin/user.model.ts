@@ -1,9 +1,9 @@
 
 export interface UserData {
-  id: number;
+  id: string;
   name: string;
   email: string;
-  contact: string;
+  phone: string;
   role: string[];
   message: string;
 }

@@ -10,6 +10,9 @@ import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
 import { toWords } from 'number-to-words';
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
+import { GenerateInvoiceService } from './generate-pdf.service';
+import { InvoiceService } from './invoice.service';
+import { ToastService } from '../../shared/toast.service';
 
 (pdfMake as any).vfs = (pdfFonts as any).vfs;
 
@@ -30,6 +33,12 @@ import pdfFonts from 'pdfmake/build/vfs_fonts';
   styleUrls: ['./invoice.component.scss'],
 })
 export class InvoiceComponent implements OnInit {
+
+  constructor(private generatePdf :GenerateInvoiceService, private invoiceService:InvoiceService,
+    private toast :ToastService
+  ){
+
+  }
   logoBase64: string = '';
 
   invoiceData: any = {
@@ -141,252 +150,36 @@ export class InvoiceComponent implements OnInit {
     this.calculateTotals();
   }
 
-  generatePDF() {
-    const formatDate = (date: Date) =>
-      new Date(date).toLocaleDateString('en-GB');
+saveAndDownloadInvoice() {
+  this.invoiceService.createInvoice(this.invoiceData).subscribe({
+    next: (res) => {
+    this.toast.success('Invoice saved successfully!');
 
-    const docDefinition: any = {
-      pageMargins: [20, 20, 20, 20],
-      content: [
-        //  Logo + Company Details + TAX INVOICE
-        {
-          columns: [
-            { image: this.logoBase64, width: 80 },
-            {
-              stack: [
-                {
-                  text: this.invoiceData.company.name,
-                  bold: true,
-                  fontSize: 12,
-                  margin: [20, 0, 0, 0],
-                },
-                {
-                  text: this.invoiceData.company.address,
-                  fontSize: 9,
-                 margin: [20, 0, 0, 0],
-                },
-                {
-                  text: `GSTIN: ${this.invoiceData.company.gst}`,
-                  fontSize: 9,
-                margin: [20, 0, 0, 0],
-                },
-                {
-                  text: this.invoiceData.company.contact,
-                  fontSize: 9,
-                 margin: [20, 0, 0, 0],
-                },
-                {
-                  text: this.invoiceData.company.email,
-                  fontSize: 9,
-                 margin: [20, 0, 0, 0],
-                },
-              ],
-              width: '*',
-            },
-            {
-              text: 'TAX INVOICE',
-              style: 'header',
-              alignment: 'right',
-              width: 'auto',
-            },
-          ],
-          margin: [0, 0, 0, 10],
-        },
+    //  this.invoiceData.id = res.id; 
 
-        //  Invoice Details Table
-     {
-  table: {
-    widths: ['30%', '30%', '20%', '20%'], // 4 columns for compact layout
-    body: [
-      [
-        { text: 'Invoice #', bold: true, fillColor: '#f0f0f0' },
-        { text: `: ${this.invoiceData.invoiceNo}` },
-        { text: 'Invoice Date', bold: true, fillColor: '#f0f0f0' },
-        { text: `: ${formatDate(this.invoiceData.invoiceDate)}` }
-      ],
-      [
-        { text: 'Terms', bold: true, fillColor: '#f0f0f0' },
-        { text: `: ${this.invoiceData.terms}` },
-        { text: 'Due Date', bold: true, fillColor: '#f0f0f0' },
-        { text: `: ${formatDate(this.invoiceData.dueDate)}` }
-      ],
-      [
-        { text: 'P.O.#', bold: true, fillColor: '#f0f0f0' },
-        { text: `: ${this.invoiceData.poNo}` ,colSpan: 3  },
-        {}, // empty to balance row
-        {}
-      ],
-      [
-        { text: 'Place Of Supply', bold: true, fillColor: '#f0f0f0' },
-        { text: `: ${this.invoiceData.placeOfSupply}`, colSpan: 3 },
-        {},
-        {}
-      ]
-    ]
-  },
-  layout: {
-    hLineWidth: () => 0.5,
-    vLineWidth: () => 0.5
-  },
-  margin: [0, 0, 0, 10]
-},
+      this.generatePDF();
+    },
+    error: (err) => {
+      console.error('Error saving invoice', err);
+       this.toast.success(`Error saving invoice  ${err.error.msg}` || 'Please try again');
 
+    },
+  });
+}
 
-        //  Bill To Section with Background
-        {
-          table: {
-            widths: ['*'],
-            body: [
-              [{ text: 'Bill To', bold: true, fillColor: '#f0f0f0' }],
-              [{ text: this.invoiceData.billTo, margin: [0, 5, 0, 5] }],
-            ],
-          },
-          layout: { hLineWidth: () => 0.5, vLineWidth: () => 0.5 },
-          margin: [0, 0, 0, 10],
-        },
+generatePDF() {
+  this.generatePdf.generateInvoicePDF(
+    this.invoiceData,
+    {
+      subTotal: this.subTotal,
+      cgstTotal: this.cgstTotal,
+      sgstTotal: this.sgstTotal,
+      total: this.total,
+      balanceDue: this.balanceDue,
+      totalInWords: this.totalInWords,
+    },
+    this.logoBase64
+  );
+}
 
-        //  Items Table with Proper CGST/SGST Style
-        {
-          table: {
-            headerRows: 1,
-            widths: ['5%', '25%', '10%', '6%', '10%', '15%', '15%', '14%'],
-            body: [
-              [
-                { text: '#', bold: true, fillColor: '#f0f0f0' },
-                {
-                  text: 'Item & Description',
-                  bold: true,
-                  fillColor: '#f0f0f0',
-                },
-                { text: 'HSN/SAC', bold: true, fillColor: '#f0f0f0' },
-                { text: 'Qty', bold: true, fillColor: '#f0f0f0' },
-                { text: 'Rate', bold: true, fillColor: '#f0f0f0' },
-                { text: 'CGST(% + AMT)', bold: true, fillColor: '#f0f0f0' },
-                { text: 'SGST(% + AMT)', bold: true, fillColor: '#f0f0f0' },
-                { text: 'Amount', bold: true, fillColor: '#f0f0f0' },
-              ],
-              ...this.invoiceData.items.map((i: any, index: number) => [
-                index + 1,
-                i.description,
-                i.hsn,
-                i.qty,
-                i.rate.toFixed(2),
-                {
-                  table: {
-                    widths: ['50%', '50%'],
-                    body: [
-                      [
-                        { text: `${i.cgst}%`, alignment: 'center' },
-                        {
-                          text: ((i.qty * i.rate * i.cgst) / 100).toFixed(2),
-                          alignment: 'center',
-                        },
-                      ],
-                    ],
-                  },
-                  layout: { hLineWidth: () => 0.5, vLineWidth: () => 0.5 },
-                },
-                {
-                  table: {
-                    widths: ['50%', '50%'],
-                    body: [
-                      [
-                        { text: `${i.sgst}%`, alignment: 'center' },
-                        {
-                          text: ((i.qty * i.rate * i.sgst) / 100).toFixed(2),
-                          alignment: 'center',
-                        },
-                      ],
-                    ],
-                  },
-                  layout: { hLineWidth: () => 0.5, vLineWidth: () => 0.5 },
-                },
-                (
-                  i.qty * i.rate +
-                  (i.qty * i.rate * (i.cgst + i.sgst)) / 100
-                ).toFixed(2),
-              ]),
-            ],
-          },
-          layout: { hLineWidth: () => 0.5, vLineWidth: () => 0.5 },
-        },
-
-        //  Totals
-        {
-          columns: [
-            {
-              width: '60%',
-              stack: [
-                { text: `\nTotal In Words`, bold: true, margin: [0, 5, 0, 0] },
-                {
-                  text: this.totalInWords,
-                  italics: true,
-                  margin: [0, 0, 0, 10],
-                },
-                { text: `Notes`, bold: true },
-                { text: this.invoiceData.notes, fontSize: 9 },
-              ],
-            },
-            {
-              width: '40%',
-              table: {
-                widths: ['*', 'auto'],
-                body: [
-                  ['Sub Total', `₹${this.subTotal.toFixed(2)}`],
-                  ['CGST', `₹${this.cgstTotal.toFixed(2)}`],
-                  ['SGST', `₹${this.sgstTotal.toFixed(2)}`],
-                  [
-                    { text: 'Total', bold: true },
-                    { text: `₹${this.total.toFixed(2)}`, bold: true },
-                  ],
-                  [
-                    'Payment Made (-)',
-                    `₹${this.invoiceData.paymentMade.toFixed(2)}`,
-                  ],
-                  [
-                    { text: 'Balance Due', bold: true },
-                    { text: `₹${this.balanceDue.toFixed(2)}`, bold: true },
-                  ],
-                ],
-              },
-              layout: { hLineWidth: () => 0.5, vLineWidth: () => 0.5 },
-              margin: [0, 10, 0, 0],
-            },
-          ],
-        },
-
-        {
-          text: '\nAuthorized Signature',
-          alignment: 'right',
-          italics: true,
-          margin: [0, 30, 0, 0],
-        },
-      ],
-
-      //  Full Page Border
-      background: function () {
-        return [
-          {
-            canvas: [
-              {
-                type: 'rect',
-                x: 5,
-                y: 5,
-                w: 585,
-                h: 830,
-                r: 0,
-                lineWidth: 1,
-                lineColor: '#000',
-              },
-            ],
-          },
-        ];
-      },
-
-      styles: { header: { fontSize: 16, bold: true } },
-      defaultStyle: { fontSize: 9 },
-    };
-
-    pdfMake.createPdf(docDefinition).open();
-  }
 }

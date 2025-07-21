@@ -367,6 +367,28 @@ export class AuthService {
     );
   }
 
+   getAllUsers(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}${authEndpoints.getAllUsers}`);
+  }
+
+  getUser(id: string): Observable<any> {
+  return this.http.get<any>(`${this.apiUrl}${authEndpoints.getAllUsers}/${id}`);
+}
+
+updateUser(id: string, data: any): Observable<any> {
+  return this.http.patch<any>(`${this.apiUrl}${authEndpoints.getAllUsers}/${id}`, data);
+}
+
+deleteUser(id: string): Observable<any> {
+  return this.http.delete<any>(`${this.apiUrl}${authEndpoints.getAllUsers}/${id}`);
+}
+
+
+createUser(data: any): Observable<any> {
+  return this.http.post<any>(`${this.apiUrl}${authEndpoints.getAllUsers}`, data);
+}
+
+
   /**
    * Sends the phone number to the backend to complete user profile.
    * Requires an authenticated user (JWT in headers).

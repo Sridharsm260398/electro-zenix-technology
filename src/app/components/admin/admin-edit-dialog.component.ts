@@ -28,7 +28,7 @@ import { UserData } from './user.model';
 
         <mat-form-field appearance="fill" class="full-width">
           <mat-label>Contact</mat-label>
-          <input matInput formControlName="contact" required />
+          <input matInput formControlName="phone" required />
         </mat-form-field>
 
         <mat-form-field appearance="fill" class="full-width">
@@ -83,7 +83,7 @@ import { UserData } from './user.model';
   ]
 })
 export class AdminEditDialogComponent {
-  roles = ['Admin', 'User', 'Editor'];
+  roles = ['admin', 'user', 'editor'];
   form: FormGroup;
 
   constructor(
@@ -94,7 +94,7 @@ export class AdminEditDialogComponent {
     this.form = this.fb.group({
       name: [data.user?.name || '', Validators.required],
       email: [data.user?.email || '', [Validators.required, Validators.email]],
-      contact: [data.user?.contact || '', Validators.required],
+      phone: [data.user?.phone || '', Validators.required],
       role: [data.user?.role || ['User'], Validators.required],
       message: [data.user?.message || '']
     });

@@ -1,4 +1,5 @@
 export const authEndpoints = {
+  getAllUsers:'/api/v1/users',
   login: '/api/v1/users/login',
   signup: '/api/v1/users/signup',
   resetPassword: '/api/v1/users/reset-password',
