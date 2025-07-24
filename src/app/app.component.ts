@@ -58,12 +58,15 @@ export class AppComponent implements OnInit, OnDestroy {
  // const userRole = this.authService.getCurrentRole();
   //this.isAdminPage = userRole === 'admin' ? true : false ;
   
-    this.router.events
-      .pipe(filter((event) => event instanceof NavigationEnd))
-      .subscribe((event: NavigationEnd) => {  
-        const hiddenRoutes = ['/login', '/signup', '/reset-password'];
-        this.showFooter = !hiddenRoutes.includes(event.urlAfterRedirects);
-      });
+ this.router.events
+  .pipe(filter((event) => event instanceof NavigationEnd))
+  .subscribe((event: NavigationEnd) => {
+    // Get only the path, ignoring query params
+    const currentPath = event?.urlAfterRedirects?.split('?')[0];
+
+    const hiddenRoutes = ['/login', '/signup', '/reset-password'];
+    this.showFooter = !hiddenRoutes.includes(currentPath);
+  });
   }
   
   get isAdmin(): boolean {
