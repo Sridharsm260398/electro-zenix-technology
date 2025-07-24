@@ -19,6 +19,7 @@ interface UserData {
 
 // Interface for backend response structure
 interface AuthResponse {
+  statusCode?:number;
   status: string;
   token: string;
   data: {
@@ -129,10 +130,9 @@ export class AuthService {
 
     // Update BehaviorSubjects for userId and role
     this._userId.next(authInformation.userID || null);
-    const storedRole = localStorage.getItem('role');
-    this._role.next(storedRole ? (storedRole.includes(',') ? storedRole.split(',') : storedRole) : 'user');
+    const storedRole = localStorage.getItem('role') || 'user';
 
-    const redirectUrl = this._role.getValue() === 'admin' ? '/dashboard' : '/home';
+        const redirectUrl = this.isAdminRole(storedRole) ? '/dashboard' : '/home';
     this.router.navigate([redirectUrl]);
 
     if (remember !== 'true') {
@@ -191,9 +191,15 @@ export class AuthService {
       const expirationDate = new Date(now.getTime() + expiresInDuration * 1000);
       this.saveAuthData(token, expirationDate, userID, userRole, rememberMe);
 
-      const redirectUrl = userRole === 'admin' ? '/dashboard' : '/home';
-      this.router.navigate([redirectUrl]);
+    const redirectUrl = this.isAdminRole(userRole) ? '/dashboard' : '/home';
+    this.router.navigate([redirectUrl]);
     }
+  }
+
+
+
+  private isAdminRole(role: string | string[]): boolean {
+    return role === 'admin' || (Array.isArray(role) && role.includes('admin'));
   }
 
   private saveAuthData(
@@ -285,6 +291,11 @@ export class AuthService {
     }
   }
 
+googleAuth(idToken: string): Observable<AuthResponse> {
+  return this.http
+    .post<AuthResponse>(`${this.apiUrl}${authEndpoints.googleAuth}`, { token: idToken })
+    
+}
   // Existing API calls
   public register(data: UserData): Observable<any> {
     return this.http.post(`${this.apiUrl}${authEndpoints.signup}`, data);

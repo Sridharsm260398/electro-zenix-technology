@@ -9,12 +9,12 @@
   <p style="color: white">Loading...</p>
 </ngx-spinner>
 <div class="app-wrapper">
-  <app-navbar *ngIf="!isAdminPage"></app-navbar>
+  <app-navbar *ngIf="!isAdmin"></app-navbar>
 
-  <div class="content" [class.no-padding]="isAdminPage">
+  <div class="content" [class.no-padding]="isAdmin">
     <router-outlet></router-outlet>
   </div>
-<ng-container  *ngIf="!isAdminPage">
+<ng-container  *ngIf="!isAdmin">
   <app-footer *ngIf="showFooter"></app-footer>
 </ng-container>
 </div>

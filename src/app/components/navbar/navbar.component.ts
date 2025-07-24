@@ -41,7 +41,8 @@ export class NavbarComponent implements OnInit {
   }
   get isAdmin(): boolean {
     const role = localStorage.getItem('role');
-    return role === 'admin';
+    return role === 'admin' || (Array.isArray(role) && role.includes('admin'))
+
   }
  
 

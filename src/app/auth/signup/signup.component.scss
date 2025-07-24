@@ -163,7 +163,7 @@
   display: flex;
   align-items: center;
   text-align: center;
-  margin: 25px 0;
+  margin-top: 5px ;
   color: #aaa;
 
   &::before,
@@ -181,66 +181,7 @@
     margin-left: .5em;
   }
 }
-.google-signup-section {
-  margin-bottom: 15px;
-  p {
-    color: #999393;
-   // margin-bottom: 15px;
-    font-size: 15px;
-  }
-  #google-signup-button {
-    display: flex;
-    justify-content: center;
-    width: 100%;
-  }
-}
 
-
-  margin-top: 1rem;
-
-  span {
-    font-size: 13px;
-    color: #ccc;
-  }
-
-  .icons {
-    display: flex;
-    justify-content: center;
-    gap: 14px;
-    margin-top: 0.5rem;
-
-    .social-button {
-      width: 25px;
-      height: 25px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.08);
-      transition: background 0.3s, transform 0.3s;
-      text-decoration: none;
-
-      &:hover {
-        background: rgba(255, 255, 255, 0.3);
-        transform: scale(1.1);
-      }
-    }
-
-    .facebook nz-icon {
-      color: #1877f2 !important;
-      font-size: 15px !important;
-    }
-
-    .linkedin nz-icon {
-      color: #0a66c2 !important;
-      font-size: 15px !important;
-    }
-
-    .google nz-icon {
-      color: #db4437 !important;
-      font-size: 15px !important;
-    }
-  }
 }
 .signup-link {
   font-size: 13px;

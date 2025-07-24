@@ -57,14 +57,20 @@ export class AppComponent implements OnInit, OnDestroy {
     });
  // const userRole = this.authService.getCurrentRole();
   //this.isAdminPage = userRole === 'admin' ? true : false ;
+  
     this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe((event: NavigationEnd) => {  
-        this.isAdminPage = this.router.url.startsWith('/dashboard');                const hiddenRoutes = ['/login', '/signup', '/reset-password'];
+        const hiddenRoutes = ['/login', '/signup', '/reset-password'];
         this.showFooter = !hiddenRoutes.includes(event.urlAfterRedirects);
       });
   }
+  
+  get isAdmin(): boolean {
+    const role = localStorage.getItem('role');
+    return role === 'admin' || (Array.isArray(role) && role.includes('admin'))
 
+  }
   ngOnInit(): void {
     // Initialize theme based on localStorage preference
     const theme = localStorage.getItem('theme');

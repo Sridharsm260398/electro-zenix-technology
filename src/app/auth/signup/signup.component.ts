@@ -1,4 +1,4 @@
-import { Component, NgZone, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, NgZone, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router'
 import { NzIconModule } from 'ng-zorro-antd/icon';
@@ -12,8 +12,8 @@ import { ToastService } from '../../shared/toast.service';
 import { TermsAndConditionsDialogComponent } from '../../components/terms-and-conditions-dialog/terms-and-conditions-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { filter } from 'rxjs';
+import { GoogleAuthComponent } from '../google-auth/google-auth.component';
 
-declare const google: any;
 @Component({
   selector: 'app-signup',
   standalone: true,
@@ -24,29 +24,22 @@ declare const google: any;
     MatIconModule,
     MatCheckboxModule,
     MatButtonModule,
-    NzIconModule
+    NzIconModule,
+    GoogleAuthComponent
   ],
-  providers: [AuthService,ToastService],
+  providers: [ToastService],
   templateUrl: './signup.component.html',
   styleUrls: ['./signup.component.scss']
 })
-export class SignupComponent implements OnInit {
+export class SignupComponent  {
   signupForm!: FormGroup;
   submitted = false;
 
-  constructor(private dialog: MatDialog,private ngZone: NgZone ,private router: Router, private fb: FormBuilder, private authService: AuthService ,private toast:ToastService) 
+  constructor(private dialog: MatDialog,private ngZone: NgZone ,private router: Router, private fb: FormBuilder, private authService: AuthService ,public toast:ToastService,
+    private cdRef:ChangeDetectorRef
+  ) 
   {
 
-        window.google.accounts.id.renderButton(
-      document.getElementById('google-signup-button'), 
-      {
-        type: 'standard',
-        size: 'large',
-        text: 'signup_with', 
-        shape: 'rectangular',
-        theme: 'outline',
-        logo_alignment: 'left'
-      })
         this.signupForm = this.fb.group(
       {
         fullName: ['', Validators.required],
@@ -66,142 +59,28 @@ export class SignupComponent implements OnInit {
       { validators: this.passwordMatchValidator }
     );
   }
-
-  ngOnInit(): void {
-  //     google.accounts.id.initialize({
-  //   client_id: '353053747362-c0n27mj9jvj2h6bhu01b4r9fgn68vo46.apps.googleusercontent.com',
-  //      callback: this.handleGoogleCallback.bind(this)
-  // });
-
-  // google.accounts.id.renderButton(
-  //   document.getElementById("googleBtn"),
-  //   { theme: "outline", size: "large" }  // customization
-  // );
-    window.google.accounts.id.renderButton(
-      document.getElementById('google-signup-button'), 
-      {
-        type: 'standard',
-        size: 'large',
-        text: 'signup_with', 
-        shape: 'rectangular',
-        theme: 'outline',
-        logo_alignment: 'left'
+  
+ handleGoogleAuth(idToken: string) {
+  this.authService.googleAuth(idToken).subscribe({
+    next: (res) => {
+      if (res?.statusCode === 201) {
+        this.toast.success('Registered with Google successfully!');
+      } else {
+        this.toast.success('Logged in with Google successfully!');
       }
-    );
-    // this.signupForm = this.fb.group(
-    //   {
-    //     fullName: ['', Validators.required],
-    //     email: ['', [Validators.required, Validators.email]],
-    //     phone: ['', [Validators.required, Validators.pattern(/^[6-9]\d{9}$/)]],
-    //     password: [
-    //       '',
-    //       [
-    //         Validators.required,
-    //         Validators.minLength(8),
-    //         Validators.pattern(/^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).+$/),
-    //       ],
-    //     ],
-    //     confirmPassword: ['', Validators.required],
-    //     terms: [false, Validators.requiredTrue],
-    //   },
-    //   { validators: this.passwordMatchValidator }
-    // );
-  }
+      this.authService.handleLoginResponse(res, true);
+      // if (!res.data.user.isProfileComplete) {
+      //   this.router.navigate(['/complete-profile']);
+      // } else {
+      //   this.router.navigate(['/dashboard']);
+      // }
+    },
+    error: (err) => {
+      this.toast.error(err.error?.message || 'Google authentication failed.');
+    },
+  });
+}
 
-// triggerGoogleLogin() {
-//   google.accounts.id.initialize({
-//     client_id: '353053747362-c0n27mj9jvj2h6bhu01b4r9fgn68vo46.apps.googleusercontent.com',
-//        callback: this.handleGoogleCallback.bind(this)
-//   });
-
-//   google.accounts.id.renderButton(
-//     document.getElementById("googleBtn"),
-//     { theme: "outline", size: "large" }  // customization
-//   ); // or showPopup or renderButton
-// }
-
-// handleGoogleCallback(response: any) {
-//   const idToken = response.credential;
-
-//   this.authService.loginWithGoogle(idToken).subscribe({
-//     next: (res) => {
-//       this.toast.success('Logged in with Google');
-//       this.router.navigate(['/home']);
-//     },
-//     error: (err) => {
-//       this.toast.error(err.error.message || 'Google login failed');
-//     }
-//   });
-// }
-  ngAfterViewInit(): void {
-    if (window.google) {
-      this.initializeGoogleSignUp();
-    } else {
-      console.warn('Google Identity Services script not loaded.');
-    }
-  }
-
-  private initializeGoogleSignUp(): void {
-    window.handleCredentialResponse = (response: any) => {
-      this.ngZone.run(() => { 
-        this.handleGoogleSignUpCallback(response);
-      });
-    };
-
-    window.google.accounts.id.initialize({
-      client_id: '353053747362-c0n27mj9jvj2h6bhu01b4r9fgn68vo46.apps.googleusercontent.com',
-      callback: window.handleCredentialResponse, 
-      auto_select: false,
-      context: 'signup'
-    });
-
-    window.google.accounts.id.renderButton(
-      document.getElementById('google-signup-button'), 
-      {
-        type: 'standard',
-        size: 'large',
-        text: 'signup_with', 
-        shape: 'rectangular',
-        theme: 'outline',
-        logo_alignment: 'left'
-      }
-    );
-
-    // Optional: Prompt One Tap for sign-up
-    // google.accounts.id.prompt((notification: any) => {
-    //   if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
-    //     console.log('One Tap not shown on registration:', notification.getNotDisplayedReason());
-    //   }
-    // });
-  }
-
-  handleGoogleSignUpCallback(response: any) {
-    const idToken = response.credential;
-    if (idToken) {
-      this.authService.googleSignUp(idToken).subscribe({
-        next: (res) => {
-          this.toast.success('Signed up with Google successfully!');
-          // After Google signup, profile is likely incomplete (missing phone)
-          if (!res.data.user.isProfileComplete) {
-            this.router.navigate(['/login']);
-       //     this.router.navigate(['/complete-profile']);
-          } else {
-            // This case might occur if account was linked/merged
-            this.router.navigate(['/dashboard']);
-          }
-        },
-        error: (err) => {
-          console.error('Google Sign-Up failed:', err);
-          this.toast.error(err.error?.message || 'Google Sign-Up failed. Please try again.');
-          if (err.status === 409) { // Conflict: user exists
-            this.router.navigate(['/login']); // Prompt to login
-          }
-        },
-      });
-    } else {
-      this.toast.error('Google credential not found.');
-    }
-  }
 
   get f() {
     return this.signupForm.controls;

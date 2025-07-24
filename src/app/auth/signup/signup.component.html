@@ -110,7 +110,9 @@
       <!-- Accept Terms -->
       <div class="form-group checkboxes">
         <mat-checkbox formControlName="terms"
-          >I agree<a ml-2 (click)="openTermsAndConditionsDialog()">terms and conditions</a></mat-checkbox
+          >I agree<a ml-2 (click)="openTermsAndConditionsDialog()"
+            >terms and conditions</a
+          ></mat-checkbox
         >
         <small *ngIf="submitted && f['terms'].errors?.['required']"
           >You must accept terms</small
@@ -123,9 +125,6 @@
     </form>
 
     <div class="social-icons">
-    <div class="divider">
-        <span>OR</span>
-      </div>
       <!-- <div class="icons">
         <a class="social-button facebook" aria-label="Facebook">
           <nz-icon nzType="facebook" nzTheme="fill"></nz-icon>
@@ -139,14 +138,17 @@
           <nz-icon nzType="linkedin" nzTheme="outline"></nz-icon>
         </a>
       </div> -->
-      <div class="google-signup-section">
-        <p>Sign up quickly with your Google account:</p>
-        <div id="google-signup-button"></div>
-      </div>
-    </div>
+      <div class="divider"><span>OR</span></div>
+      <app-google-auth
+        [context]="'signup'"
+        [buttonText]="'continue_with'"
+        (googleAuthSuccess)="handleGoogleAuth($event)"
+        (googleAuthError)="toast.error($event)"
+      ></app-google-auth>
 
-    <p class="signup-link">
-      Already have an account? <a routerLink="/login">Login</a>
-    </p>
+      <p class="signup-link">
+        Already have an account? <a routerLink="/login">Login</a>
+      </p>
+    </div>
   </div>
 </div>

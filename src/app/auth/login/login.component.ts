@@ -16,12 +16,7 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
 import { AuthService } from '../auth.service';
 import { ToastService } from '../../shared/toast.service';
 import { forkJoin } from 'rxjs';
-declare global {
-  interface Window {
-    google: any;
-    handleCredentialResponse: (response: any) => void; // Global callback for GIS
-  }
-}
+import { GoogleAuthComponent } from '../google-auth/google-auth.component';
 @Component({
   selector: 'app-login',
   standalone: true,
@@ -33,6 +28,7 @@ declare global {
     MatCheckboxModule,
     MatButtonModule,
     NzIconModule,
+    GoogleAuthComponent,
   ],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
@@ -50,49 +46,13 @@ export class LoginComponent implements OnDestroy {
   resetToken = '';
   constructor(
     private router: Router,
-    private toast: ToastService,
+    public toast: ToastService,
     private fb: FormBuilder,
     private authService: AuthService,
-    private ngZone : NgZone
-  ) {
-     window.google.accounts.id.renderButton(
-      document.getElementById('google-signin-button'), // Target div ID
-      {
-        type: 'standard',
-        size: 'large',
-        text: 'signin_with', // 'signin_with' or 'continue_with'
-        shape: 'rectangular',
-        theme: 'outline',
-        logo_alignment: 'left'
-      }
-    )
-  }
+    private ngZone: NgZone
+  ) {}
 
   ngOnInit(): void {
-  //   google.accounts.id.initialize({
-  //     client_id:
-  //       '353053747362-c0n27mj9jvj2h6bhu01b4r9fgn68vo46.apps.googleusercontent.com',
-  //     callback: this.handleGoogleCallback.bind(this),
-  //   auto_select: false,
-  //   context: 'signup' // Important: tells Google it's for signup
-  // });
-
-  // google.accounts.id.prompt((notification:any) => {
-  //   if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
-  //     console.log('One Tap not shown:', notification.getNotDisplayedReason());
-  //   }
-  // }); 
-  window.google.accounts.id.renderButton(
-      document.getElementById('google-signin-button'), // Target div ID
-      {
-        type: 'standard', // 'standard' or 'icon'
-        size: 'large',
-        text: 'signin_with', // 'signin_with' or 'continue_with'
-        shape: 'rectangular',
-        theme: 'outline',
-        logo_alignment: 'left'
-      }
-    );
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, this.emailOrPhoneValidator]],
       password: ['', Validators.required],
@@ -103,100 +63,28 @@ export class LoginComponent implements OnDestroy {
     this.resetOtpValidators();
   }
 
-  // triggerGoogleLogin() {
-  //   google.accounts.id.initialize({
-  //     client_id:
-  //       '353053747362-c0n27mj9jvj2h6bhu01b4r9fgn68vo46.apps.googleusercontent.com',
-  //     callback: (response: any) => this.handleGoogleCallback.bind(this),
-  //   });
-
-  //   google.accounts.id.prompt(); 
-  // }
-
-  // handleGoogleCallback(response: any) {
-  //   const token = response.credential;
-
-  //   this.authService.loginWithGoogle(token).subscribe({
-  //     next: (res) => {
-  //       //localStorage.setItem('token', res.token);
-  //       this.toast.success('Logged in with Google');
-  //     },
-  //     error: () => this.toast.error('Google login failed'),
-  //   });
-  // }
-  ngAfterViewInit(): void {
-    // Initialize Google Identity Services after view is rendered
-    if (window.google) {
-      this.initializeGoogleSignIn();
-    } else {
-      console.warn('Google Identity Services script not loaded.');
-      // You might want to add a fallback or retry mechanism here
-    }
-  }
-
-  private initializeGoogleSignIn(): void {
-    // Attach the global callback for Google to call when a credential is returned
-    // We bind it to `this` to ensure `this` refers to the component instance inside the callback.
-    window.handleCredentialResponse = (response: any) => {
-      this.ngZone.run(() => { // Wrap in ngZone.run to ensure Angular change detection
-        this.handleGoogleSignInCallback(response);
-      });
-    };
-
-    // Initialize GIS for rendering the button
-    window.google.accounts.id.initialize({
-      client_id: '353053747362-c0n27mj9jvj2h6bhu01b4r9fgn68vo46.apps.googleusercontent.com',
-      callback: window.handleCredentialResponse, // Use the global callback
-      auto_select: false,
-      context: 'signin' // IMPORTANT: tells Google it's for sign-in
-    });
-
-    // Render the Google Sign-In button into the designated div
-    window.google.accounts.id.renderButton(
-      document.getElementById('google-signin-button'), // Target div ID
-      {
-        type: 'standard', // 'standard' or 'icon'
-        size: 'large',
-        text: 'signin_with', // 'signin_with' or 'continue_with'
-        shape: 'rectangular',
-        theme: 'outline',
-        logo_alignment: 'left'
+ handleGoogleAuth(idToken: string) {
+  this.authService.googleAuth(idToken).subscribe({
+    next: (res) => {
+      if (res?.statusCode === 201) {
+        this.toast.success('Registered with Google successfully!');
+      } else {
+        this.toast.success('Logged in with Google successfully!');
       }
-    );
+      this.authService.handleLoginResponse(res, true);
 
-    // Optional: Prompt One Tap for sign-in
-    // google.accounts.id.prompt((notification: any) => {
-    //   if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
-    //     console.log('One Tap not shown on login:', notification.getNotDisplayedReason());
-    //   }
-    // });
-  }
+      // if (!res.data.user.isProfileComplete) {
+      //   this.router.navigate(['/complete-profile']);
+      // } else {
+      //   this.router.navigate(['/dashboard']);
+      // }
+    },
+    error: (err) => {
+      this.toast.error(err.error?.message || 'Google authentication failed.');
+    },
+  });
+}
 
-  handleGoogleSignInCallback(response: any) {
-    const idToken = response.credential;
-    if (idToken) {
-      this.authService.googleSignIn(idToken).subscribe({
-        next: (res) => {
-          this.toast.success('Logged in with Google successfully!');
-          // Check if profile is complete (e.g., phone number)
-          if (!res.data.user.isProfileComplete) {
-            this.router.navigate(['/complete-profile']);
-          } else {
-            this.router.navigate(['/dashboard']); // Redirect to dashboard or home
-          }
-        },
-        error: (err) => {
-          console.error('Google Sign-In failed:', err);
-          this.toast.error(err.error?.message || 'Google Sign-In failed. Please try again.');
-          if (err.status === 404) { // User not found, prompt to register
-            this.router.navigate(['/signup']);
-          }
-        },
-      });
-    } else {
-      this.toast.error('Google credential not found.');
-    }
-  }
 
   ngOnDestroy(): void {
     clearInterval(this.interval);
@@ -352,7 +240,6 @@ export class LoginComponent implements OnDestroy {
         next: (res) => {
           this.toast.clearAll();
           this.toast.success('OTP verified. Logging in...');
-          this.authService.handleLoginResponse(res, rememberMe);
         },
         error: (err) => {
           this.toast.clearAll();

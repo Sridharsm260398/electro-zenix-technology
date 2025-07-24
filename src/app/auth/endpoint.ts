@@ -7,6 +7,7 @@ export const authEndpoints = {
   verifyOtp: '/api/v1/users/verify-otp',
   forgotPassword: '/api/v1/users/forgot-password',
   changePassword: '/api/v1/users/update-password',
+  googleAuth: '/api/v1/users/auth/google',
   googleLogin: '/api/v1/users/google/signin',
   googleRegister: '/api/v1/users/google/signup', 
   completeProfile: '/api/v1/users/complete-profile',
