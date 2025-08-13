@@ -137,6 +137,6 @@ export const routes: Routes = [
   // fallback
   {
     path: '**',
-    redirectTo: '',
+    redirectTo: 'dashboard/home',
   },
 ];

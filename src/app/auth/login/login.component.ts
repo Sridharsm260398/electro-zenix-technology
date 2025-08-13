@@ -278,7 +278,7 @@ export class LoginComponent implements OnDestroy {
   }
 
   startTimer(): void {
-    this.timer = 10;
+    this.timer = 60;
     clearInterval(this.interval);
     this.interval = setInterval(() => {
       this.timer--;
